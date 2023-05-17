@@ -6,6 +6,7 @@ import {BrowserRouter as Router} from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import { makeServer } from "./server";
+import {ProductProvider} from "./contexts/ProductContext";
 
 // Call make Server
 makeServer();
@@ -19,8 +20,9 @@ root.render(
 
   <StrictMode>
     <Router>
-      <App />
+      <ProductProvider>
+        <App />
+      </ProductProvider>
     </Router>
-       
   </StrictMode>
 );
