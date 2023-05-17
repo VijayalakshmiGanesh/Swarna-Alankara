@@ -13,6 +13,8 @@ export const products = [
     weight: 6.25,
     categoryName: "Gold",
     imageURL: "../../assests/chains_gold_1.jpg",
+    price: 40119,
+    rating: 3.9
   },
   {
     _id: uuid(),
@@ -21,6 +23,8 @@ export const products = [
     weight: 8.17,
     categoryName: "Gold",
     imageURL: "../../assests/chains_gold_2.jpg",
+    price: 50906,
+    rating: 5,
   },
   {
     _id: uuid(),
@@ -29,6 +33,8 @@ export const products = [
     weight: 12,
     categoryName: "Gold",
     imageURL: "../../assests/chains_gold_3.jpg",
+    price: 75615,
+    rating: 4.35,
   },
   {
     _id: uuid(),
@@ -37,6 +43,8 @@ export const products = [
       weight: 11.25,
     categoryName: "Silver",
     imageURL: "../../assests/chains_silver_1.jpg",
+    price: 1476,
+    rating: 3,
   },
   {
     _id: uuid(),
@@ -45,6 +53,8 @@ export const products = [
     weight: 12.17,
     categoryName: "Silver",
     imageURL: "../../assests/chains_silver_2.jpg",
+    price: 1504,
+    rating: 4.65,
   },
   {
     _id: uuid(),
@@ -53,6 +63,8 @@ export const products = [
     weight: 7.15,
     categoryName: "Silver",
     imageURL: "../../assests/chains_silver_3.jpg",
+    price: 1042,
+    rating: 3.87,
   },
   {
     _id: uuid(),
@@ -61,6 +73,8 @@ export const products = [
       weight: 2.25,
     categoryName: "Gold",
     imageURL: "../../assests/earring_gold_1.jpg",
+    price:15109,
+    rating: 4.12,
   },
   {
     _id: uuid(),
@@ -69,6 +83,8 @@ export const products = [
     weight: 3,
     categoryName: "Gold",
     imageURL: "../../assests/earring_gold_2.jpg",
+    price:19395,
+    rating: 4.9,
   },
   {
     _id: uuid(),
@@ -77,6 +93,8 @@ export const products = [
     weight: 6,
     categoryName: "Gold",
     imageURL: "../../assests/earring_gold_3.jpg",
+    price: 38504,
+    rating: 3.45,
   },
   {
     _id: uuid(),
@@ -85,6 +103,8 @@ export const products = [
     weight: 4.35,
     categoryName: "Gold",
     imageURL: "../../assests/earring_gold_4.jpg",
+    price: 29075,
+    rating: 4.4,
   },
   {
     _id: uuid(),
@@ -93,6 +113,8 @@ export const products = [
       weight: 3,
     categoryName: "Silver",
     imageURL: "../../assests/earring_silver_1.jpg",
+    price: 490,
+    rating: 5,
   },
   {
     _id: uuid(),
@@ -101,6 +123,8 @@ export const products = [
     weight: 12.5,
     categoryName: "Silver",
     imageURL: "../../assests/earring_silver_2.jpg",
+    price: 1960,
+    rating: 4,
   },
   {
     _id: uuid(),
@@ -109,6 +133,8 @@ export const products = [
     weight: 4,
     categoryName: "Silver",
     imageURL: "../../assests/earring_silver_3.jpg",
+    price: 570,
+    rating: 3.8,
   },{
     _id: uuid(),
     title: "Three layered gold ring",
@@ -116,6 +142,8 @@ export const products = [
       weight: 3.5,
     categoryName: "Gold",
     imageURL: "../../assests/ring_gold_1.jpg",
+    price: 22252,
+    rating: 4.2
   },
   {
     _id: uuid(),
@@ -124,6 +152,8 @@ export const products = [
     weight: 2.65,
     categoryName: "Gold",
     imageURL: "../../assests/ring_gold_2.jpg",
+    price: 17395,
+    rating: 4.7
   },
   {
     _id: uuid(),
@@ -132,14 +162,18 @@ export const products = [
     weight: 4,
     categoryName: "Gold",
     imageURL: "../../assests/ring_gold_3.jpg",
+    price: 27074,
+    rating: 3.95,
   },
   {
     _id: uuid(),
     title: "Dazzling silver ring",
     subCategory: "Ring",  
-      weight: 4.65,
+    weight: 4.65,
     categoryName: "Silver",
     imageURL: "../../assests/ring_silver_1.jpg",
+    price: 615,
+    rating: 4.95
     },
   {
     _id: uuid(),
@@ -148,6 +182,8 @@ export const products = [
     weight: 4,
     categoryName: "Silver",
     imageURL: "../../assests/ring_silver_2.jpg",
+    price: 570,
+    rating: 3.15,
   },
   {
     _id: uuid(),
@@ -156,5 +192,7 @@ export const products = [
     weight: 3.95,
     categoryName: "Silver",
     imageURL: "../../assests/ring_silver_4.jpg",
+    price: 560,
+    rating: 3.5
   },
 ];
