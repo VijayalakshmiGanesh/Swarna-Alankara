@@ -7,6 +7,7 @@ import "./index.css";
 import App from "./App";
 import { makeServer } from "./server";
 import {ProductProvider} from "./contexts/ProductContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 // Call make Server
 makeServer();
@@ -21,7 +22,9 @@ root.render(
   <StrictMode>
     <Router>
       <ProductProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </ProductProvider>
     </Router>
   </StrictMode>
