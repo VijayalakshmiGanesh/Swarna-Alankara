@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,6 +17,6 @@
 }
 
 .banner-text {
-  font-family: "Dancing Script", cursive;
+  font-family: 'Dancing Script', cursive;
   font-weight: 700;
 }
