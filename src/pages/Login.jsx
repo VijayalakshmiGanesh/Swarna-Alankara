@@ -14,8 +14,9 @@ function Login() {
   };
   return (
     <>
-      <div className='flex justify-center items-center flex-col border-1 border-solid border-slate-700'>
-        <div className="h-full my-16 p-5 drop-shadow-lg w-[350px]">
+      <div className='relative flex justify-center items-center  '>
+        {/* <div className='w-[400px] h-[400px] p-5 bg-white shadow-lg h-full flex flex-col items-center border-1 border-solid border-slate-700'> */}
+        <div className=" my-16 py-5 px-7 drop-shadow-lg w-[370px] border-2 border-solid border-gray-50 shadow-lg">
         <p className="text-2xl font-semibold text-center">Login</p>
         <p className="text-gray-400 text-xs">
           Please login using account detail below
@@ -26,12 +27,12 @@ function Login() {
               Incorrect login Credentials. Please try again.{' '}
             </p>
           )}
-          <label className='flex flex-col my-5'>
+          <label className='flex flex-col my-5 w-full'>
             <span className='text-xs text-left'>Enter email</span>
             <input
             type="email"
             placeholder="Enter email"
-            className="text-left w-full border-gray-500 px-4 py-3"
+            className="text-left w-full border-gray-500 px-4 py-3 border-[1px] border-solid border-stone-300 "
             onChange={e => setEmailEntered(e.target.value)}
             value={emailEntered}
           />
