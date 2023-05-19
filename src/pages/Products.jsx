@@ -4,25 +4,27 @@ import { BiSearchAlt2 } from 'react-icons/bi';
 
 import ProductContext from '../contexts/ProductContext';
 import { AuthContext } from '../contexts/AuthContext';
+import { CartContext } from '../contexts/CartContext';
 
 
 function Products() {
   const { filteredProducts, dispatch } =
     useContext(ProductContext);
   const { isUserLoggedIn } = useContext(AuthContext);
+  const {AddToCart, messageFromAPI} = useContext(CartContext)
 
   const [textToSearch, SetTextToSearch] = useState('');
   const navigate = useNavigate()
 
   function HandleFilters(filterType, valueToSend) {
     dispatch({ type: filterType, payload: valueToSend });
-
+console.log(messageFromAPI)
   }
 
 
-  function AddToCartHander() {
+  function AddToCartHander(producttoAddinCart) {
     if (isUserLoggedIn) { 
-      console.log("login")
+      AddToCart(producttoAddinCart)
     }
     else {
       navigate("/login")
@@ -31,33 +33,9 @@ function Products() {
 
   return (
     <>
-      <h1>Products</h1>
-      <div>
-        <h3>Sort By</h3>
-        <select
-          onChange={e => dispatch({ type: 'sort', payload: e.target.value })}
-        >
-          <option value="recommended">Recommended</option>
-          <option value="lowToHigh">Price (Low to High)</option>
-          <option value="highToLow">Price (High to Low)</option>
-          <option value="ratings">Customer Ratings</option>
-        </select>
-        Search:{' '}
-        <input
-          type="text"
-          placeholder="Enter the product name"
-          onChange={e => SetTextToSearch(e.target.value)}
-        />
-        <button
-          onClick={() => dispatch({ type: 'search', payload: textToSearch })}
-        >
-          Search
-          <span>
-            <BiSearchAlt2 />
-          </span>
-        </button>
-      </div>
-      <div>
+      
+      <div className='flex container mx-auto'>
+        <div className='w-1/5 h-full mx-auto sticky bg-gray-200 h-screen text-left px-5 py-5 border-r-4 border-indigo-500'>
         <h3>Filters</h3>
         <fieldset>
           <legend>Categories</legend>
@@ -161,7 +139,34 @@ function Products() {
           />{' '}
           Below 1000
         </fieldset>
-      </div>
+        </div>
+        <div className='flex-1'>
+          <h1>Products</h1>
+        <h3>Sort By</h3>
+        <select
+          onChange={e => dispatch({ type: 'sort', payload: e.target.value })}
+        >
+          <option value="recommended">Recommended</option>
+          <option value="lowToHigh">Price (Low to High)</option>
+          <option value="highToLow">Price (High to Low)</option>
+          <option value="ratings">Customer Ratings</option>
+        </select>
+        Search:{' '}
+        <input
+          type="text"
+          placeholder="Enter the product name"
+          onChange={e => SetTextToSearch(e.target.value)}
+        />
+        <button
+          onClick={() => dispatch({ type: 'search', payload: textToSearch })}
+        >
+          Search
+          <span>
+            <BiSearchAlt2 />
+          </span>
+        </button>
+      
+      
       {filteredProducts?.length === 0 ? (
         <p>No products</p>
       ) : (
@@ -173,7 +178,9 @@ function Products() {
             justifyContent: 'center',
           }}
         >
-          {filteredProducts?.map(({ _id, title, imageURL, price, rating }) => (
+            {filteredProducts?.map((product) => {
+              const { _id, title, imageURL, price, rating, weight, categoryName, subCategory,  } = product;
+              return (
             <div
               key={_id}
               style={{ border: '1px solid', margin: '0.5rem', width: '250px' }}
@@ -184,12 +191,14 @@ function Products() {
               <p>price: {price}</p>
               <p>Rating: {rating}</p>
               <NavLink to={`/product-detail/${_id}`}>Go</NavLink>
-              <button className='text-white bg-pink-700  p-3 rounded-md w-4/5 font-bold' onClick={() => AddToCartHander()}>Add to Cart</button>
+              <button className='text-white bg-pink-700  p-3 rounded-md w-4/5 font-bold' onClick={() => AddToCartHander(product)}>Add to Cart</button>
               <button>Add to WishList</button>
             </div>
-          ))}
-        </div>
-      )}
+          )})}
+            </div>
+           
+        )}</div>
+         </div>
     </>
   );
 }
