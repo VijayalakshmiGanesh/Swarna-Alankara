@@ -11,7 +11,7 @@ export function ProductProvider({ children }) {
 
       if (response.status === 200) {
         setProductList(JSON.parse(response._bodyInit).products);
-        filteredProducts = JSON.parse(response._bodyInit).products;
+        setFilteredProducts( JSON.parse(response._bodyInit).products);
       }
     } catch (e) {
       console.log(e);
