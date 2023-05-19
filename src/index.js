@@ -8,6 +8,7 @@ import App from "./App";
 import { makeServer } from "./server";
 import {ProductProvider} from "./contexts/ProductContext";
 import { AuthProvider } from "./contexts/AuthContext";
+import { CartProvider } from "./contexts/CartContext";
 
 // Call make Server
 makeServer();
@@ -23,7 +24,9 @@ root.render(
     <Router>
       <ProductProvider>
         <AuthProvider>
-          <App />
+          <CartProvider>
+            <App />
+          </CartProvider>
         </AuthProvider>
       </ProductProvider>
     </Router>
