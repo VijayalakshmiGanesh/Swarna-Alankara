@@ -148,7 +148,7 @@ export function ProductProvider({ children }) {
 
   return (
     <ProductContext.Provider
-      value={{ productList, filteredProducts, dispatch }}
+      value={{ productList, filteredProducts, state, dispatch }}
     >
       {children}
     </ProductContext.Provider>
