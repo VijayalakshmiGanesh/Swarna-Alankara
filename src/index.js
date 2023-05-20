@@ -9,6 +9,7 @@ import { makeServer } from "./server";
 import {ProductProvider} from "./contexts/ProductContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
+import { WishListProvider } from "./contexts/WishListContext";
 
 // Call make Server
 makeServer();
@@ -25,7 +26,9 @@ root.render(
       <ProductProvider>
         <AuthProvider>
           <CartProvider>
-            <App />
+            <WishListProvider>
+               <App />
+           </WishListProvider>
           </CartProvider>
         </AuthProvider>
       </ProductProvider>
