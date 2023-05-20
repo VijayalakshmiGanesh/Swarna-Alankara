@@ -11,20 +11,20 @@ function Products() {
   const { filteredProducts, dispatch } =
     useContext(ProductContext);
   const { isUserLoggedIn } = useContext(AuthContext);
-  const {AddToCart, messageFromAPI} = useContext(CartContext)
+  const {addItemToCart, isItemInCart} = useContext(CartContext)
 
   const [textToSearch, SetTextToSearch] = useState('');
   const navigate = useNavigate()
 
   function HandleFilters(filterType, valueToSend) {
     dispatch({ type: filterType, payload: valueToSend });
-console.log(messageFromAPI)
+// console.log(messageFromAPI)
   }
 
-
+  
   function AddToCartHander(producttoAddinCart) {
     if (isUserLoggedIn) { 
-      AddToCart(producttoAddinCart)
+      addItemToCart(producttoAddinCart)
     }
     else {
       navigate("/login")
@@ -191,7 +191,9 @@ console.log(messageFromAPI)
               <p>price: {price}</p>
               <p>Rating: {rating}</p>
               <NavLink to={`/product-detail/${_id}`}>Go</NavLink>
-              <button className='text-white bg-pink-700  p-3 rounded-md w-4/5 font-bold' onClick={() => AddToCartHander(product)}>Add to Cart</button>
+                  <button className='text-white bg-pink-700  p-3 rounded-md w-4/5 font-bold' onClick={() => isItemInCart(_id) === -1?AddToCartHander(product):navigate("/cart")}>{
+                    isItemInCart(_id) === -1?"Add To Cart":"Go To Cart"
+                  }</button>
               <button>Add to WishList</button>
             </div>
           )})}
