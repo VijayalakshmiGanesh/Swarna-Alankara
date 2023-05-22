@@ -10,8 +10,10 @@ export const WishListProvider = ({ children }) => {
   const navigate = useNavigate();
   const { isUserLoggedIn } = useContext(AuthContext);
   const { addItemToCart, removeItemFromCart } = useContext(CartContext);
+  const [loading, setLoading] = useState(false);
 
   const getWishlistItems = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/user/wishlist', {
         method: 'GET',
@@ -26,6 +28,8 @@ export const WishListProvider = ({ children }) => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -38,6 +42,7 @@ export const WishListProvider = ({ children }) => {
   const addItemToWishlist = async productToAddWishlist => {
     const isItemFound = isItemInWishlist(productToAddWishlist._id);
     if (isItemFound === -1) {
+      setLoading(true);
       try {
         const response = await fetch('/api/user/wishlist', {
           method: 'POST',
@@ -48,6 +53,8 @@ export const WishListProvider = ({ children }) => {
         });
       } catch (e) {
         console.log(e);
+      } finally {
+        setLoading(false);
       }
     } else {
       navigate('/wishlist');
@@ -64,6 +71,7 @@ export const WishListProvider = ({ children }) => {
   }
 
   const removeItemFromWishlist = async productToBeRemovedFromWishlistID => {
+    setLoading(true);
     try {
       const response = await fetch(
         `/api/user/wishlist/${productToBeRemovedFromWishlistID}`,
@@ -76,6 +84,8 @@ export const WishListProvider = ({ children }) => {
       );
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
     getWishlistItems();
   };
@@ -100,6 +110,7 @@ export const WishListProvider = ({ children }) => {
         getWishlistItems,
         MoveToCartFromWishList,
         MoveToWishListFromCart,
+        loading,
       }}
     >
       {children}

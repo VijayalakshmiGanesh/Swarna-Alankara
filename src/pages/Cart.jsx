@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import { NavLink } from 'react-router-dom';
 import { WishListContext } from '../contexts/WishListContext';
+import Loader from '../components/Loader/Loader';
 
 function Cart() {
   const {
@@ -10,6 +11,7 @@ function Cart() {
     addItemToCart,
     removeItemFromCart,
     reduceItemQuantity,
+    loading,
   } = useContext(CartContext);
   const { MoveToWishListFromCart } = useContext(WishListContext);
 
@@ -24,6 +26,7 @@ function Cart() {
                     <h1 className="text-4xl font-bold text-[#efa939]">Shopping cart</h1>
                 </div>
             </div> */}
+      {loading && <Loader />}
       {itemsInCart?.length === 0 ? (
         <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row">
           <img src="../assests/emptyCart.svg" height="500" width="500" />
@@ -131,7 +134,7 @@ function Cart() {
                             <p>Have a coupon? </p>
                             <button>Apply</button>
                         </div>
-                        
+
                             <p className="border-b-2">Price details</p>
                         <div className="border-b-2">
                             <p>
