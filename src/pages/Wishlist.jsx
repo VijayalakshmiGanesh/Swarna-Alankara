@@ -2,14 +2,20 @@ import { useContext } from 'react';
 import { WishListContext } from '../contexts/WishListContext';
 import { NavLink } from 'react-router-dom';
 import { CartContext } from '../contexts/CartContext';
+import Loader from '../components/Loader/Loader';
 
 function Wishlist() {
-  const { itemsInWishList, removeItemFromWishlist, MoveToCartFromWishList } =
-    useContext(WishListContext);
+  const {
+    itemsInWishList,
+    removeItemFromWishlist,
+    MoveToCartFromWishList,
+    loading,
+  } = useContext(WishListContext);
 
   return (
     <>
       {/* <h1>Wishlist</h1> */}
+      {loading && <Loader />}
       {itemsInWishList.length === 0 ? (
         <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row min-h-[100vh]">
           <img
@@ -64,7 +70,7 @@ function Wishlist() {
                       Move to cart
                     </button>
                     <button
-                      className="text-pink-700 bg-white text-semibold px-3 py-2 rounded-lg border-pink-700 border-2 mx-2"
+                      className="text-pink-700 bg-white text-semibold px-3 py-2 rounded-lg border-rose-700 border-2 mx-2"
                       onClick={() => removeItemFromWishlist(_id)}
                     >
                       X

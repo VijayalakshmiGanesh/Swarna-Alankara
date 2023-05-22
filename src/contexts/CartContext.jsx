@@ -8,10 +8,12 @@ export const CartContext = createContext();
 export function CartProvider({ children }) {
   const [itemsInCart, setItemsInCart] = useState([]);
   const { isUserLoggedIn } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   // const { removeItemFromWishlist } = useContext(WishListContext);
   const navigate = useNavigate();
 
   const getCartItems = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/user/cart', {
         method: 'GET',
@@ -25,6 +27,8 @@ export function CartProvider({ children }) {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,6 +37,7 @@ export function CartProvider({ children }) {
 
   const addItemToCart = async productToAddInCart => {
     const isItemFound = isItemInCart(productToAddInCart._id);
+    setLoading(true);
     if (isItemFound === -1) {
       try {
         const response = await fetch('/api/user/cart', {
@@ -65,10 +70,12 @@ export function CartProvider({ children }) {
         console.log(e);
       }
     }
+    setLoading(false);
     getCartItems();
   };
 
   const removeItemFromCart = async productToBeRemovedFromCartID => {
+    setLoading(true);
     try {
       const response = await fetch(
         `/api/user/cart/${productToBeRemovedFromCartID}`,
@@ -81,11 +88,14 @@ export function CartProvider({ children }) {
       );
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
     getCartItems();
   };
 
   const reduceItemQuantity = async (itemToReduceQuantityID, qty) => {
+    setLoading(true);
     if (qty > 1) {
       try {
         const response = await fetch(
@@ -108,7 +118,7 @@ export function CartProvider({ children }) {
     } else {
       removeItemFromCart(itemToReduceQuantityID);
     }
-
+    setLoading(false);
     getCartItems();
   };
 
@@ -131,6 +141,7 @@ export function CartProvider({ children }) {
         removeItemFromCart,
         reduceItemQuantity,
         AddToCartHander,
+        loading,
       }}
     >
       {children}

@@ -4,17 +4,20 @@ export const ProductContext = createContext();
 
 export function ProductProvider({ children }) {
   const [productList, setProductList] = useState();
-
+  const [loading, setLoading] = useState(false);
   const getDataFromAPI = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/api/products');
 
       if (response.status === 200) {
         setProductList(JSON.parse(response._bodyInit).products);
-        setFilteredProducts( JSON.parse(response._bodyInit).products);
+        setFilteredProducts(JSON.parse(response._bodyInit).products);
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,13 +145,19 @@ export function ProductProvider({ children }) {
     return newfilteredData;
   };
 
-   useEffect(() => {
+  useEffect(() => {
     setFilteredProducts(filterProductData());
   }, [productList, state]);
 
   return (
     <ProductContext.Provider
-      value={{ productList, filteredProducts, state, dispatch }}
+      value={{
+        productList,
+        filteredProducts,
+        state,
+        dispatch,
+        loading,
+      }}
     >
       {children}
     </ProductContext.Provider>
