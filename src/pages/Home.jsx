@@ -18,6 +18,7 @@ function Home() {
             <img
               src="./assests/heroBanner.jpg"
               className="h-full object-cover w-full blur-[1px]"
+              alt="hero banner"
             />
           </div>
           <div className="absolute flex h-full w-full top-0 left-0 flex-col align-center">

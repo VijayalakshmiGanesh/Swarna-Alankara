@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { WishListContext } from '../contexts/WishListContext';
 import { NavLink } from 'react-router-dom';
-import { CartContext } from '../contexts/CartContext';
 import Loader from '../components/Loader/Loader';
 
 function Wishlist() {
