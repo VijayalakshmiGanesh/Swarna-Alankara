@@ -31,8 +31,10 @@ function ProductDetail() {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => getProductDetails, []);
+  useEffect(() => {
+    getProductDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const {
     _id,
     title,
