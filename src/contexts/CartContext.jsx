@@ -9,7 +9,7 @@ export function CartProvider({ children }) {
   const [itemsInCart, setItemsInCart] = useState([]);
   const { isUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  // const { removeItemFromWishlist } = useContext(WishListContext);
+  const { setShowAlert, callAlert } = useContext(WishListContext);
   const navigate = useNavigate();
 
   const getCartItems = async () => {
@@ -47,6 +47,11 @@ export function CartProvider({ children }) {
           },
           body: JSON.stringify({ product: productToAddInCart }),
         });
+
+        if (response.status === 201) {
+          setShowAlert(true);
+          callAlert('Product added to cart');
+        }
       } catch (e) {
         console.log(e);
       }
@@ -66,6 +71,11 @@ export function CartProvider({ children }) {
             }),
           }
         );
+
+        if (response.status === 201) {
+          setShowAlert(true);
+          callAlert('Success');
+        }
       } catch (e) {
         console.log(e);
       }
@@ -86,6 +96,10 @@ export function CartProvider({ children }) {
           },
         }
       );
+      if (response.status === 201) {
+        setShowAlert(true);
+        callAlert('Product removed from cart');
+      }
     } catch (e) {
       console.log(e);
     } finally {
@@ -112,6 +126,10 @@ export function CartProvider({ children }) {
             }),
           }
         );
+        if (response.status === 201) {
+          setShowAlert(true);
+          callAlert('Success');
+        }
       } catch (e) {
         console.log(e);
       }
