@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { AuthContext } from './AuthContext';
 import { CartContext } from './CartContext';
-import Alerts from '../components/Alerts';
 
 export const WishListContext = createContext();
 
@@ -12,7 +11,7 @@ export const WishListProvider = ({ children }) => {
   const { isUserLoggedIn } = useContext(AuthContext);
   const { addItemToCart, removeItemFromCart } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const { notifySuccess } = useContext(CartContext);
 
   const getWishlistItems = async () => {
     setLoading(true);
@@ -36,12 +35,7 @@ export const WishListProvider = ({ children }) => {
   useEffect(() => {
     getWishlistItems();
   }, []);
-  function callAlert(msg) {
-    console.log('called');
-    console.log('show alert', showAlert);
-    console.log(msg);
-    return <Alerts message={msg} />;
-  }
+
   const isItemInWishlist = idToFind =>
     itemsInWishList.findIndex(({ _id }) => _id === idToFind);
 
@@ -58,7 +52,8 @@ export const WishListProvider = ({ children }) => {
           body: JSON.stringify({ product: productToAddWishlist }),
         });
         if (response.status === 201) {
-          setShowAlert(true);
+          // setShowAlert(true);
+          notifySuccess('Product added to wishlist');
         }
       } catch (e) {
         console.log(e);
@@ -70,9 +65,7 @@ export const WishListProvider = ({ children }) => {
     }
     getWishlistItems();
   };
-  useEffect(() => {
-    callAlert('Product added to wishlist');
-  }, [callAlert, showAlert]);
+  useEffect(() => {}, []);
 
   function AddToWishlistHander(producttoAddinWishlist) {
     if (isUserLoggedIn) {
@@ -94,9 +87,9 @@ export const WishListProvider = ({ children }) => {
           },
         }
       );
-      if (response.status === 201) {
-        setShowAlert(true);
-        callAlert('Product removed from wishlist');
+      console.log(response);
+      if (response.status === 200) {
+        notifySuccess('Product removed from wishlist');
       }
     } catch (e) {
       console.log(e);
@@ -109,15 +102,13 @@ export const WishListProvider = ({ children }) => {
   const MoveToCartFromWishList = productToBeMoved => {
     removeItemFromWishlist(productToBeMoved._id);
     addItemToCart(productToBeMoved);
-    setShowAlert(true);
-    callAlert('Product moved to Cart');
+    notifySuccess('Product moved to cart');
   };
 
   const MoveToWishListFromCart = productToBeMoved => {
     removeItemFromCart(productToBeMoved._id);
     addItemToWishlist(productToBeMoved);
-    setShowAlert(true);
-    callAlert('Product removed to wishlist');
+    notifySuccess('Product moved to wishlist');
   };
   return (
     <WishListContext.Provider
@@ -131,9 +122,6 @@ export const WishListProvider = ({ children }) => {
         MoveToCartFromWishList,
         MoveToWishListFromCart,
         loading,
-        showAlert,
-        setShowAlert,
-        callAlert,
       }}
     >
       {children}

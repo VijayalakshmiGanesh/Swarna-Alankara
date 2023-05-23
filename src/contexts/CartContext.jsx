@@ -2,14 +2,15 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { useNavigate } from 'react-router';
 import { WishListContext } from './WishListContext';
-
+import { toast } from 'react-toastify';
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [itemsInCart, setItemsInCart] = useState([]);
   const { isUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const { setShowAlert, callAlert } = useContext(WishListContext);
+  const notifySuccess = msg => toast.success(msg);
+  const notifyError = msg => toast.error(msg);
   const navigate = useNavigate();
 
   const getCartItems = async () => {
@@ -49,8 +50,7 @@ export function CartProvider({ children }) {
         });
 
         if (response.status === 201) {
-          setShowAlert(true);
-          callAlert('Product added to cart');
+          notifySuccess('Product added to cart');
         }
       } catch (e) {
         console.log(e);
@@ -72,9 +72,8 @@ export function CartProvider({ children }) {
           }
         );
 
-        if (response.status === 201) {
-          setShowAlert(true);
-          callAlert('Success');
+        if (response.status === 200) {
+          notifySuccess('Quantity incremented');
         }
       } catch (e) {
         console.log(e);
@@ -96,9 +95,8 @@ export function CartProvider({ children }) {
           },
         }
       );
-      if (response.status === 201) {
-        setShowAlert(true);
-        callAlert('Product removed from cart');
+      if (response.status === 200) {
+        notifySuccess('Product removed from cart');
       }
     } catch (e) {
       console.log(e);
@@ -126,9 +124,8 @@ export function CartProvider({ children }) {
             }),
           }
         );
-        if (response.status === 201) {
-          setShowAlert(true);
-          callAlert('Success');
+        if (response.status === 200) {
+          notifySuccess('Quantity reduced');
         }
       } catch (e) {
         console.log(e);
@@ -160,6 +157,9 @@ export function CartProvider({ children }) {
         reduceItemQuantity,
         AddToCartHander,
         loading,
+
+        notifySuccess,
+        notifyError,
       }}
     >
       {children}
