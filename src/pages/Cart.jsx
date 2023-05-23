@@ -17,6 +17,7 @@ function Cart() {
 
   useEffect(() => {
     getCartItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
@@ -29,7 +30,12 @@ function Cart() {
       {loading && <Loader />}
       {itemsInCart?.length === 0 ? (
         <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row">
-          <img src="../assests/emptyCart.svg" height="500" width="500" />
+          <img
+            src="../assests/emptyCart.svg"
+            height="500"
+            width="500"
+            alt="Empty cart"
+          />
           <div className="flex flex-col">
             <p className="text-2xl font-bold my-5">No items in cart</p>
             <p>

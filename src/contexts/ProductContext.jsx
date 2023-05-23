@@ -147,6 +147,7 @@ export function ProductProvider({ children }) {
 
   useEffect(() => {
     setFilteredProducts(filterProductData());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productList, state]);
 
   return (

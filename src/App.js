@@ -12,7 +12,7 @@ import Wishlist from './pages/Wishlist';
 import Footer from './components/Footer';
 import Login from './pages/Login';
 import SignUp from './pages/SignUpPage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (

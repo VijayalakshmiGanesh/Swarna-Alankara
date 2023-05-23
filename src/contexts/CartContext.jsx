@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { useNavigate } from 'react-router';
-import { WishListContext } from './WishListContext';
 import { toast } from 'react-toastify';
 export const CartContext = createContext();
 
