@@ -1,343 +1,216 @@
-import { useContext, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { BiSearchAlt2 } from 'react-icons/bi';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { useContext } from 'react';
 
 import ProductContext from '../contexts/ProductContext';
-import { AuthContext } from '../contexts/AuthContext';
-import { CartContext } from '../contexts/CartContext';
-import { WishListContext } from '../contexts/WishListContext';
 import Loader from '../components/Loader/Loader';
+import ProductCard from '../components/ProductCard';
 
 function Products() {
-  const { filteredProducts, dispatch, loading } = useContext(ProductContext);
-  const { isUserLoggedIn } = useContext(AuthContext);
-  const { addItemToCart, isItemInCart } = useContext(CartContext);
-
-  const [textToSearch, SetTextToSearch] = useState('');
-  const navigate = useNavigate();
-
-  const { isItemInWishlist, addItemToWishlist, removeItemFromWishlist } =
-    useContext(WishListContext);
+  const { filteredProducts, dispatch, loading, state } =
+    useContext(ProductContext);
 
   function HandleFilters(filterType, valueToSend) {
     dispatch({ type: filterType, payload: valueToSend });
-    // console.log(messageFromAPI)
   }
 
-  function AddToCartHander(producttoAddinCart) {
-    if (isUserLoggedIn) {
-      addItemToCart(producttoAddinCart);
-    } else {
-      navigate('/login');
-    }
-  }
-
-  function AddToWishlistHander(producttoAddorRemove, operation) {
-    if (isUserLoggedIn) {
-      operation === 'add'
-        ? addItemToWishlist(producttoAddorRemove)
-        : removeItemFromWishlist(producttoAddorRemove._id);
-    } else {
-      navigate('/login');
-    }
-  }
   return (
     <>
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex container mx-auto">
-          <div className="w-1/5 h-full mx-auto sticky bg-gray-200 h-screen text-left px-5 py-5 border-r-4 border-indigo-500">
-            <h3>Filters</h3>
-            <fieldset>
-              <legend>Categories</legend>
+        <div className="flex  mx-auto py-4 px-2 flex-wrap">
+          <div className="w-1/5  mx-auto  text-left px-5 py-5 min-w-fit border-r-2 border-blue-950 border-solid">
+            <div className="fixed w-1/6">
+              <p className="flex justify-between items-center my-1">
+                <h3 className="text-blue-950 font-semibold text-xl tracking-wide uppercase">
+                  Filters
+                </h3>
+                <button
+                  className="text-white bg-pink-700  py-2 px-3 rounded-md w-3/5 font-bold w-fit"
+                  onClick={() => dispatch({ type: 'reset' })}
+                >
+                  Reset
+                </button>
+              </p>
+              <div>
+                <p className="tracking-wide text-pink-700 font-semibold uppercase py-2">
+                  Categories
+                </p>
+                <label className="text-blue-950 tracking-wide  px-2">
+                  <input
+                    type="checkbox"
+                    value="Gold"
+                    className="mr-1"
+                    onChange={e => {
+                      HandleFilters('categoryFilter', e.target.value);
+                    }}
+                    checked={state.categoryFilter.includes('Gold')}
+                  />
+                  Gold
+                </label>
+                <label className="text-blue-950 tracking-wide  py-2 px-2">
+                  <input
+                    type="checkbox"
+                    value="Silver"
+                    className="mr-1"
+                    onChange={e =>
+                      HandleFilters('categoryFilter', e.target.value)
+                    }
+                    checked={state.categoryFilter.includes('Silver')}
+                  />
+                  Silver
+                </label>
+              </div>
+              <fieldset>
+                <legend className="tracking-wide text-pink-700 font-semibold uppercase py-2">
+                  Sub Categories
+                </legend>
+                <label className="text-blue-950 tracking-wide block px-2">
+                  <input
+                    type="checkbox"
+                    value="Chains"
+                    className="mr-1"
+                    onChange={e =>
+                      HandleFilters('subCategoryFilter', e.target.value)
+                    }
+                    checked={state.subCategoryFilter.includes('Chains')}
+                  />
+                  Chains
+                </label>
+                <label className="text-blue-950 tracking-wide block py-2 px-2">
+                  <input
+                    type="checkbox"
+                    value="Earrings"
+                    className="mr-1"
+                    onChange={e =>
+                      HandleFilters('subCategoryFilter', e.target.value)
+                    }
+                    checked={state.subCategoryFilter.includes('Earrings')}
+                  />
+                  Earrings
+                </label>
+                <label className="text-blue-950 tracking-wide block pb-2 px-2">
+                  <input
+                    type="checkbox"
+                    value="Ring"
+                    className="mr-1"
+                    onChange={e =>
+                      HandleFilters('subCategoryFilter', e.target.value)
+                    }
+                    checked={state.subCategoryFilter.includes('Ring')}
+                  />
+                  Rings
+                </label>
+              </fieldset>
+              <fieldset>
+                <legend className="tracking-wide text-pink-700 font-semibold uppercase py-2">
+                  Rating Item
+                </legend>
+                <label className="text-blue-950 tracking-wide block  px-2">
+                  <input
+                    type="radio"
+                    name="ratingFilter"
+                    className="mr-1"
+                    value="4.5"
+                    onChange={e =>
+                      HandleFilters('ratingsFilter', e.target.value)
+                    }
+                    checked={state.ratingsFilter.includes('4.5')}
+                  />
+                  4.5+
+                </label>
+                <label className="text-blue-950 tracking-wide block py-2 px-2">
+                  <input
+                    type="radio"
+                    name="ratingFilter"
+                    className="mr-1"
+                    value="4.0"
+                    onChange={e =>
+                      HandleFilters('ratingsFilter', e.target.value)
+                    }
+                    checked={state.ratingsFilter.includes('4.0')}
+                  />
+                  4.0+
+                </label>
+                <label className="text-blue-950 tracking-wide block  px-2">
+                  <input
+                    type="radio"
+                    name="ratingFilter"
+                    className="mr-1"
+                    value="3.5"
+                    onChange={e =>
+                      HandleFilters('ratingsFilter', e.target.value)
+                    }
+                    checked={state.ratingsFilter.includes('3.5')}
+                  />
+                  3.5+
+                </label>
+                <label className="text-blue-950 tracking-wide block py-2 px-2">
+                  <input
+                    type="radio"
+                    name="ratingFilter"
+                    className="mr-1 "
+                    value="3.0"
+                    onChange={e =>
+                      HandleFilters('ratingsFilter', e.target.value)
+                    }
+                    checked={state.ratingsFilter.includes('3.0')}
+                  />
+                  3.0+
+                </label>
+                <label className="text-blue-950 tracking-wide block pb-2 px-2">
+                  <input
+                    type="radio"
+                    name="ratingFilter"
+                    className="mr-1"
+                    value="all"
+                    onChange={e =>
+                      HandleFilters('ratingsFilter', e.target.value)
+                    }
+                    defaultChecked
+                  />
+                  All
+                </label>
+              </fieldset>
+              <p className="tracking-wide text-pink-700 font-semibold uppercase py-2">
+                Price
+              </p>
               <input
-                type="checkbox"
-                value="Gold"
-                onChange={e => HandleFilters('categoryFilter', e.target.value)}
-              />{' '}
-              Gold
-              <input
-                type="checkbox"
-                value="Silver"
-                onChange={e => HandleFilters('categoryFilter', e.target.value)}
-              />{' '}
-              Silver
-            </fieldset>
-            <fieldset>
-              <legend>Sub Categories</legend>
-              <input
-                type="checkbox"
-                value="Chains"
+                type="range"
+                min="1"
+                max="100000"
+                step="5000"
+                value={state.priceFilter}
                 onChange={e =>
-                  HandleFilters('subCategoryFilter', e.target.value)
+                  HandleFilters('priceFilter', Number(e.target.value))
                 }
-              />{' '}
-              Chains
-              <input
-                type="checkbox"
-                value="Earrings"
-                onChange={e =>
-                  HandleFilters('subCategoryFilter', e.target.value)
-                }
-              />{' '}
-              Earrings
-              <input
-                type="checkbox"
-                value="Ring"
-                onChange={e =>
-                  HandleFilters('subCategoryFilter', e.target.value)
-                }
-              />{' '}
-              Rings
-            </fieldset>
-            <fieldset>
-              <legend>Rating Item</legend>
-              <input
-                type="radio"
-                name="ratingFilter"
-                value="4.5"
-                onChange={e => HandleFilters('ratingsFilter', e.target.value)}
-              />{' '}
-              4.5+
-              <input
-                type="radio"
-                name="ratingFilter"
-                value="4.0"
-                onChange={e => HandleFilters('ratingsFilter', e.target.value)}
-              />{' '}
-              4.0+
-              <input
-                type="radio"
-                name="ratingFilter"
-                value="3.5"
-                onChange={e => HandleFilters('ratingsFilter', e.target.value)}
-              />{' '}
-              3.5+
-              <input
-                type="radio"
-                name="ratingFilter"
-                value="3.0"
-                onChange={e => HandleFilters('ratingsFilter', e.target.value)}
-              />{' '}
-              3.0+
-              <input
-                type="radio"
-                name="ratingFilter"
-                value="all"
-                onChange={e => HandleFilters('ratingsFilter', e.target.value)}
-                defaultChecked
-              />{' '}
-              All
-            </fieldset>
-            <fieldset>
-              <legend>Price</legend>
-              <input
-                type="checkbox"
-                value="30001-1000000"
-                onChange={e => HandleFilters('priceFilter', e.target.value)}
-              />{' '}
-              Above 30000
-              <input
-                type="checkbox"
-                value="10001-30000"
-                onChange={e => HandleFilters('priceFilter', e.target.value)}
-              />{' '}
-              10000 - 30000
-              <input
-                type="checkbox"
-                value="1001-10000"
-                onChange={e => HandleFilters('priceFilter', e.target.value)}
-              />{' '}
-              1000 - 10000
-              <input
-                type="checkbox"
-                value="0-1000"
-                onChange={e => HandleFilters('priceFilter', e.target.value)}
-              />{' '}
-              Below 1000
-            </fieldset>
+              ></input>
+            </div>
           </div>
           <div className="flex-1">
-            <h1>Products</h1>
-            <h3>Sort By</h3>
-            <select
-              onChange={e =>
-                dispatch({ type: 'sort', payload: e.target.value })
-              }
-            >
-              <option value="recommended">Recommended</option>
-              <option value="lowToHigh">Price (Low to High)</option>
-              <option value="highToLow">Price (High to Low)</option>
-              <option value="ratings">Customer Ratings</option>
-            </select>
-            Search:{' '}
-            <input
-              type="text"
-              placeholder="Enter the product name"
-              onChange={e => SetTextToSearch(e.target.value)}
-            />
-            <button
-              onClick={() =>
-                dispatch({ type: 'search', payload: textToSearch })
-              }
-            >
-              Search
+            <div className="flex justify-between items-center mx-5 px-5">
+              <h1 className="text-2xl text-blue-950 font-bold">Products</h1>
               <span>
-                <BiSearchAlt2 />
+                <h3>Sort By</h3>
+                <select
+                  onChange={e =>
+                    dispatch({ type: 'sort', payload: e.target.value })
+                  }
+                >
+                  <option value="recommended">Recommended</option>
+                  <option value="lowToHigh">Price (Low to High)</option>
+                  <option value="highToLow">Price (High to Low)</option>
+                  <option value="ratings">Customer Ratings</option>
+                </select>
               </span>
-            </button>
+            </div>
             {filteredProducts?.length === 0 ? (
               <p>No products</p>
             ) : (
-              // <div
-              //   style={{
-              //     display: 'flex',
-              //     flexWrap: 'wrap',
-              //     alignContent: 'center',
-              //     justifyContent: 'center',
-              //   }}
-              // >
-              <div className="flex flex-wrap mx-5 justify-center drop-shadow-lg">
+              <div className="flex flex-wrap mx-5 justify-center drop-shadow-lg ">
                 {filteredProducts?.map(product => {
-                  const { _id, title, imageURL, price, rating } = product;
-                  return (
-                    // <div className="flex flex-wrap">
-                    <div
-                      className="flex flex-col px-2 py-2 m-3 h-[31rem] w-[15rem] border-2 border-zinc-300 shadow-lg rounded-lg bg-gray-100"
-                      key={_id}
-                    >
-                      <NavLink
-                        to={`/product-detail/${_id}`}
-                        className="flex flex-col"
-                      >
-                        <img
-                          src={imageURL}
-                          className="object-cover h-3/4 py-3"
-                          alt={`${title} thumbnail`}
-                          style={{ height: 320 }}
-                        />
-                        <div className="grow my-1">
-                          <p className="text-blue-900 font-semibold text-lg">
-                            {title}
-                          </p>
-                          <p className="my-1">
-                            <span className="text-pink-700 font-bold">
-                              Rs. {price}/-
-                            </span>
-                            <span className="bg-blue-900 text-white text-sm px-2  rounded-lg mx-2 py-[1px]">
-                              {rating}★
-                            </span>
-                          </p>
-                        </div>
-                      </NavLink>
-
-                      <p className="flex justify-center items-center w-full py-2">
-                        <button
-                          className="text-white bg-pink-700  p-3 rounded-md w-3/5 font-bold"
-                          onClick={() =>
-                            isItemInCart(_id) === -1
-                              ? AddToCartHander(product)
-                              : navigate('/cart')
-                          }
-                        >
-                          {isItemInCart(_id) === -1
-                            ? 'Add To Cart'
-                            : 'Go To Cart'}
-                        </button>
-                        <button
-                          className=""
-                          onClick={() =>
-                            AddToWishlistHander(
-                              product,
-                              isItemInWishlist(_id) === -1 ? 'add' : 'remove'
-                            )
-                          }
-                        >
-                          {isItemInWishlist(_id) === -1 ? (
-                            <AiOutlineHeart
-                              style={{
-                                border: '2px solid rgb(190 24 93)',
-                                padding: '5',
-                                fontWeight: 700,
-                                borderRadius: 5,
-                                fontSize: 'xx-large',
-                                marginLeft: 10,
-                                color: ' rgb(190 24 93)',
-                                height: '2.9rem',
-                              }}
-                            />
-                          ) : (
-                            // <span className="">
-                            <AiFillHeart
-                              style={{
-                                border: '2px solid rgb(190 24 93)',
-                                // backgroundColor: ' rgb(190 24 93)',
-                                padding: '5',
-                                fontWeight: 700,
-                                borderRadius: 5,
-                                fontSize: 'xx-large',
-                                marginLeft: 10,
-                                // color: ' white',
-                                color: 'red',
-                                height: '2.9rem',
-                              }}
-                            />
-                            // </span>
-                          )}
-                        </button>
-                      </p>
-                    </div>
-                    // </div>
-                    // <div
-                    //   key={_id}
-                    //   style={{
-                    //     border: '1px solid',
-                    //     margin: '0.5rem',
-                    //     width: '250px',
-                    //   }}
-                    //   className="flex flex-col justify-center items-center"
-                    // >
-                    //   <img
-                    //     src={imageURL}
-                    //     alt={`${title}`}
-                    //     height="150"
-                    //     width="250"
-                    //   />
-                    //   <h2 className="banner-text">{title}</h2>
-                    //   <p>price: {price}</p>
-                    //   <p>Rating: {rating}</p>
-                    //   <NavLink to={`/product-detail/${_id}`}>Go</NavLink>
-                    //   <button
-                    //     className="text-white bg-pink-700  p-3 rounded-md w-4/5 font-bold"
-                    //     onClick={() =>
-                    //       isItemInCart(_id) === -1
-                    //         ? AddToCartHander(product)
-                    //         : navigate('/cart')
-                    //     }
-                    //   >
-                    //     {isItemInCart(_id) === -1
-                    //       ? 'Add To Cart'
-                    //       : 'Go To Cart'}
-                    //   </button>
-                    //   <button
-                    //     onClick={() =>
-                    //       AddToWishlistHander(
-                    //         product,
-                    //         isItemInWishlist(_id) === -1 ? 'add' : 'remove'
-                    //       )
-                    //     }
-                    //   >
-                    //     {isItemInWishlist(_id) === -1
-                    //       ? 'Add to Wishlist'
-                    //       : 'Remove from Wishlist'}
-                    //   </button>
-                    // </div>
-                  );
+                  return <ProductCard product={product} />;
                 })}
               </div>
-              // </div>
             )}
           </div>
         </div>
