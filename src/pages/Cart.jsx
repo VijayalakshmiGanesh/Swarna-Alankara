@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { CartContext } from '../contexts/CartContext';
 import { NavLink } from 'react-router-dom';
 import { WishListContext } from '../contexts/WishListContext';
@@ -14,19 +14,24 @@ function Cart() {
     loading,
   } = useContext(CartContext);
   const { MoveToWishListFromCart } = useContext(WishListContext);
-
+  const [enteredDiscountCode, setDiscountCode] = useState('');
+  const totalAmount =
+    itemsInCart?.length > 0 &&
+    itemsInCart?.reduce((sum, item) => sum + item.qty * item.price, 0);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const discountHandler = () => {
+    if (enteredDiscountCode.toUpperCase() === 'NEO15') {
+      setDiscountPercent(0.15);
+    } else {
+      setDiscountPercent(0);
+    }
+  };
   useEffect(() => {
     getCartItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
-      {/* <div className="relative h-[250px] bg-neutral-300">
-                <img src="https://images.pexels.com/photos/9953655/pexels-photo-9953655.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load" alt="Image" class="w-full object-cover h-full blur-sm" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <h1 className="text-4xl font-bold text-[#efa939]">Shopping cart</h1>
-                </div>
-            </div> */}
       {loading && <Loader />}
       {itemsInCart?.length === 0 ? (
         <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row">
@@ -49,145 +54,166 @@ function Cart() {
           </div>
         </div>
       ) : (
-        <div className="container mx-auto xl:py-7  xl:my-7 flex ">
-          <div className="order-items flex flex-col text-left w-[3/5]">
-            <div className="flex justify-around text-blue-950 font-bold text-lg border-b-2">
-              <span className="grow">Product</span>
-              <span className="w-1/5 text-blue-950 ">Price</span>
-              <span className="w-1/5">Quantity</span>
-              <span className="w-1/5 text-blue-950"> Total</span>
-              <span>&nbsp; &nbsp; &nbsp;</span>
+        <>
+          <div className="flex p-2 justify-center my-5 flex-col md:flex-row ">
+            <table class="table-fixed border-spacing-x-2 border-spacing-y-3 border-separate border-2 border-gray-200 border-solid">
+              <thead>
+                <tr className="py-1 border-b-2 border-solid border-zinc-700">
+                  <th>Item</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th className="text-white">Operations</th>
+                </tr>
+              </thead>
+              <tbody>
+                <>
+                  {itemsInCart.map(item => {
+                    const {
+                      title,
+                      qty,
+                      subCategory,
+                      price,
+                      weight,
+                      _id,
+                      imageURL,
+                    } = item;
+
+                    return (
+                      <tr
+                        className="border-2 border-solid  border-gray-500 border border-slate-600"
+                        key={_id}
+                      >
+                        <td className="w-2/5">
+                          <NavLink
+                            to={`/product-detail/${_id}`}
+                            className=" flex items-center"
+                          >
+                            <img
+                              src={imageURL}
+                              alt={`${title} thumbnail`}
+                              className="h-[100px] w-[100px] object-cover min-w-[100px]"
+                            />
+                            <div className="flex flex-col px-2 text-left">
+                              <p className="text-blue-950 font-semibold">
+                                {title}
+                              </p>
+                              <p className="text-xs ">{subCategory}</p>
+                              <p className="text-xs ">{weight} grams</p>
+                            </div>
+                          </NavLink>
+                        </td>
+                        <td className="text-pink-700 font-semibold">
+                          Rs.{price}/-
+                        </td>
+                        <td>
+                          <span className="">
+                            <button
+                              className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
+                              onClick={() => addItemToCart(item)}
+                            >
+                              +
+                            </button>
+                            <span>{qty}</span>
+                            <button
+                              className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
+                              onClick={() => reduceItemQuantity(item._id, qty)}
+                            >
+                              -
+                            </button>
+                          </span>
+                        </td>
+                        <td className="text-pink-700 font-semibold">
+                          Rs.{qty * price}/-
+                        </td>
+                        <td>
+                          <span className="flex flex-col">
+                            <button
+                              className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold  my-1 px-2 py-1"
+                              onClick={() => removeItemFromCart(item._id)}
+                            >
+                              Delete
+                            </button>
+                            <button
+                              className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
+                              onClick={() => MoveToWishListFromCart(item)}
+                            >
+                              Move to wishlist
+                            </button>
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </>
+              </tbody>
+            </table>
+            <div className="mx-4">
+              <div className=" rounded-lg shadow-lg my-1 mx-2 w-[23rem] p-5">
+                <p className="border-y-4 border-solid border-blue-950 p-3 font-bold text-blue-950 my-3">
+                  PRICE DETAILS
+                </p>
+                <div className="my-2 py-2">
+                  <p className="flex justify-between">
+                    <span>Price [{itemsInCart.length} items]</span>
+                    <span>₹ {totalAmount}.00</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span>Discount</span>
+                    <span>₹ 0</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span>Delivery charges</span>
+                    <span>FREE</span>
+                  </p>
+                  <p className="flex justify-between">
+                    <span>Coupon discount</span>
+                    <span>
+                      ₹ {Math.round(totalAmount * discountPercent)}.00
+                    </span>
+                  </p>
+                </div>
+                <p className="flex justify-between py-3">
+                  <input
+                    type="text"
+                    placeholder="Enter code"
+                    className="border-2 border-solid border-slate-200 p-2 rounded-lg"
+                    onChange={e => setDiscountCode(e.target.value)}
+                  />
+                  <button
+                    className="rounded-lg bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-2"
+                    onClick={() =>
+                      enteredDiscountCode.length !== 0 &&
+                      enteredDiscountCode.trim() !== '' &&
+                      discountHandler()
+                    }
+                    disabled={discountPercent > 0 ? true : false}
+                  >
+                    Apply Coupon
+                  </button>
+                </p>
+                <p className="border-y-4 border-solid border-blue-950 p-3 font-bold flex justify-between text-blue-950 mb-3">
+                  <span>TOTAL AMOUNT</span>
+                  <span>
+                    ₹ {Math.round(totalAmount - totalAmount * discountPercent)}
+                    .00
+                  </span>
+                </p>
+                <p className="text-pink-700 font-semibold py-3">
+                  {`You will save ₹ ${Math.round(
+                    totalAmount * discountPercent
+                  )}.00 on this order`}
+                </p>
+                <button className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1">
+                  CHECKOUT
+                </button>
+              </div>
             </div>
-            {itemsInCart?.length === 0 ? (
-              <p>No items in cart</p>
-            ) : (
-              <>
-                {itemsInCart.map(item => {
-                  const {
-                    title,
-                    qty,
-                    subCategory,
-                    price,
-                    weight,
-                    id,
-                    _id,
-                    imageURL,
-                  } = item;
-
-                  return (
-                    <div
-                      className="flex justify-around border-b-2 items-center"
-                      key={id}
-                    >
-                      <div className="grow">
-                        <NavLink
-                          to={`/product-detail/${_id}`}
-                          className=" flex items-center"
-                        >
-                          <img
-                            src={imageURL}
-                            alt={`${title} thumbnail`}
-                            className="h-[100px] w-[100px]"
-                          />
-                          <div className="flex flex-col px-2">
-                            <p>{title}</p>
-                            <p>{subCategory}</p>
-                            <p>{weight}</p>
-                          </div>
-                        </NavLink>
-                      </div>
-                      <span className="w-1/5">{price}</span>
-                      <span className="w-1/5">
-                        <button
-                          className="px-1 bg-blue-900 text-white py-1 px-2 rounded-lg mx-2 min-w-[25px] font-bold"
-                          onClick={() => addItemToCart(item)}
-                        >
-                          +
-                        </button>
-                        <span>{qty}</span>
-                        <button
-                          className="px-1 bg-blue-900 text-white py-1 px-2 rounded-lg mx-2 min-w-[25px] font-bold"
-                          onClick={() => reduceItemQuantity(item._id, qty)}
-                        >
-                          -
-                        </button>
-                      </span>
-                      <span className="w-1/5">Rs. {qty * price}</span>
-                      <span className="w-1/5 flex flex-col">
-                        <button
-                          className="rounded-full bg-red-700 text-white hover:bg-white hover:text-red-700 m-3 px-2 py-1"
-                          onClick={() => removeItemFromCart(item._id)}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          className="rounded-full bg-red-700 text-white hover:bg-white hover:text-red-700 px-2 py-1"
-                          onClick={() => MoveToWishListFromCart(item)}
-                        >
-                          Move to wishlist
-                        </button>
-                      </span>
-                    </div>
-                  );
-                })}
-              </>
-            )}
           </div>
-          {/* <div className="cart-total w-[2/5]">
-                    <h2>Cart total</h2>
-                    <div className="  bg-neutral-100">
-                        <div className="flex border-b-2">
-                            <p>Have a coupon? </p>
-                            <button>Apply</button>
-                        </div>
-
-                            <p className="border-b-2">Price details</p>
-                        <div className="border-b-2">
-                            <p>
-                            <span>Price: [items]</span>
-                            <span>₹ 1200</span>
-                        </p>
-                        <p>
-                            <span>Discount:</span>
-                            <span>₹ 1200</span>
-                        </p>
-                        <p>
-                            <span>Delivery Charges</span>
-                            <span>₹ 1200</span>
-                        </p>
-                        </div>
-                        <p>Total Amount: ....</p>
-                    </div>
-                    <button>CHECK OUT</button>
-                </div> */}
-        </div>
+        </>
       )}
     </div>
   );
-
-  // return (
-  //     <><h1>Cart</h1>
-  //         {
-  //             cartList?.length === 0 ? (<p>No items in the cart</p>) : (
-  //                 <>
-  //                     {
-  //                         cartList?.map((product) => {
-  //                              const {_id, title, qty, price, id} = product
-  //                         return(
-  //                             <div key={_id} className="bg-cyan-500 shadow-lg shadow-cyan-500/50 m-3">
-  //                                 <p>{title}</p>
-  //                                 <p>{qty}</p>
-  //                                 <p>{price}</p>
-  //                                 <button className="bg-blue-700 p-3 rounded text-white" onClick={() => deleteAnCartItem(_id)}>Delete</button>
-  //                             </div>
-  //                         )
-  //                     })
-  //                    }
-  //                 </>
-  //             )
-  //     }
-  //     </>
-  // )
 }
 
 export default Cart;
