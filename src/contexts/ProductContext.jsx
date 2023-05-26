@@ -51,11 +51,15 @@ export function ProductProvider({ children }) {
       case 'ratingsFilter':
         return { ...result, ratingsFilter: action.payload };
       case 'priceFilter':
+        return { ...result, priceFilter: action.payload };
+      case 'reset':
         return {
-          ...result,
-          priceFilter: result.priceFilter.includes(action.payload)
-            ? result.priceFilter.filter(item => item !== action.payload)
-            : [...result.priceFilter, action.payload],
+          sortData: 'recommended',
+          search: '',
+          categoryFilter: [],
+          subCategoryFilter: [],
+          ratingsFilter: '',
+          priceFilter: 100000,
         };
       default:
         return result;
@@ -68,7 +72,7 @@ export function ProductProvider({ children }) {
     categoryFilter: [],
     subCategoryFilter: [],
     ratingsFilter: '',
-    priceFilter: [],
+    priceFilter: 100000,
   });
 
   const filterProductData = () => {
@@ -129,18 +133,11 @@ export function ProductProvider({ children }) {
             ({ rating }) => rating >= Number(state.ratingsFilter)
           );
 
-    //price filter
+    // //price filter
     newfilteredData =
-      state.priceFilter.length === 0
-        ? newfilteredData
-        : state.priceFilter
-            .map(range => {
-              const [min, max] = range.split('-').map(Number);
-              return newfilteredData.filter(
-                product => product.price >= min && product.price <= max
-              );
-            })
-            .reduce((acc, curr) => [...acc, ...curr], []);
+      newfilteredData?.length >= 0 &&
+      state?.priceFilter > 0 &&
+      newfilteredData?.filter(({ price }) => price <= state.priceFilter);
 
     return newfilteredData;
   };
