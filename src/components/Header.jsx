@@ -1,10 +1,20 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
+import { BiSearchAlt2 } from 'react-icons/bi';
+
+import ProductContext from '../contexts/ProductContext';
 
 function Header() {
   const [isClicked, setIsClicked] = useState(false);
+  const { dispatch } = useContext(ProductContext);
 
+  const [textToSearch, SetTextToSearch] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { pathname } = location;
+  console.log(pathname);
   return (
     <header className="bg-blue-950 ">
       <div className="flex justify-between  items-center text-lg xl:max-w-7xl xl:mx-auto max-w-full px-[8%] flex-wrap w-full">
@@ -24,7 +34,25 @@ function Header() {
           } w-full  lg:w-auto lg:flex lg:items-center}`}
           id="nav-menu"
         >
-          <ul className="text-[#efa939] lg:flex lg:justify-between text-left">
+          <ul className="text-[#efa939] lg:flex lg:justify-between lg:items-center text-left  ">
+            <li className="flex items-center lg:justify-between">
+              <input
+                type="text"
+                placeholder="Enter the product name"
+                onChange={e => SetTextToSearch(e.target.value)}
+                className="border-2 border-solid border-[#efa939] rounded-lg py-1 px-4 bg-blue-950"
+              />
+              <button
+                onClick={() => {
+                  dispatch({ type: 'search', payload: textToSearch });
+
+                  pathname !== '/products' && navigate('/products');
+                }}
+                className="rounded-lg px-2  py-1 h-full relative right-9 "
+              >
+                <BiSearchAlt2 />
+              </button>
+            </li>
             <li>
               <NavLink
                 to="/"
