@@ -7,9 +7,9 @@ export function AuthProvider({ children }) {
   const navigate = useNavigate();
   const [hasErrorOccured, setHasErrorOccured] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
+  const [loggedInUserDetails, setLoggedInUserDetails] = useState({});
   const LoginHandler = async (enteredEmail, enteredPassword) => {
-    setIsUserLoggedIn("false")
+    setIsUserLoggedIn('false');
     try {
       const response = await fetch('/api/auth/login', {
         method: 'post',
@@ -25,8 +25,9 @@ export function AuthProvider({ children }) {
           'key',
           JSON.parse(response._bodyInit).encodedToken
         );
-        setIsUserLoggedIn(true)
+        setIsUserLoggedIn(true);
         setHasErrorOccured(false);
+        setLoggedInUserDetails(JSON.parse(response._bodyInit).foundUser);
         navigate('/products');
       } else {
         // console.log(response)
@@ -35,42 +36,56 @@ export function AuthProvider({ children }) {
           setIsUserLoggedIn(false);
         }
       }
+      console.log(response);
     } catch (e) {
       console.log(e);
     }
   };
 
-  const SignUpHander = async (enteredEmail, enteredPassword, firstName, lastName) => {
+  const SignUpHander = async (
+    enteredEmail,
+    enteredPassword,
+    firstName,
+    lastName
+  ) => {
     setIsUserLoggedIn(false);
-    try { 
-      const response = await fetch("/api/auth/signup", {
-        method: "post",
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'post',
         body: JSON.stringify({
           email: enteredEmail,
           password: enteredPassword,
           lastName,
-          firstName
-        })
-      })
+          firstName,
+        }),
+      });
 
       if (response.status === 201) {
         localStorage.setItem(
           'key',
-          JSON.parse(response._bodyInit).encodedToken)
-        setIsUserLoggedIn(true)
-         navigate('/products');
+          JSON.parse(response._bodyInit).encodedToken
+        );
+        setIsUserLoggedIn(true);
+        navigate('/products');
       } else {
-        console.log(response)
-        setIsUserLoggedIn(false)
+        console.log(response);
+        setIsUserLoggedIn(false);
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
   return (
-    <AuthContext.Provider value={{ LoginHandler, hasErrorOccured, SignUpHander, isUserLoggedIn }}>
+    <AuthContext.Provider
+      value={{
+        LoginHandler,
+        hasErrorOccured,
+        SignUpHander,
+        isUserLoggedIn,
+        loggedInUserDetails,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
-
