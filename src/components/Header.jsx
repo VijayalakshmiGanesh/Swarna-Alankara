@@ -85,6 +85,14 @@ function Header() {
                 WishList
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/user-profile"
+                className="lg:px-5 py-2 block hover:text-white font-semibold"
+              >
+                Profile
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>
