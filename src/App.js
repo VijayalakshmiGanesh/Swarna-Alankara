@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import SignUp from './pages/SignUpPage';
 import { ToastContainer } from 'react-toastify';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/apitest" element={<Mockman />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/user-profile" element={<UserProfile />} />
       </Routes>
       <ToastContainer
         position="bottom-right"
