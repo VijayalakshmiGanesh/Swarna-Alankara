@@ -1,15 +1,26 @@
-import { useContext } from 'react';
-import { WishListContext } from '../contexts/WishListContext';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
+import {
+  MoveToCartFromWishList,
+  getWishlistItems,
+  removeItemFromWishlist,
+} from '../services/wishlist';
+import { useDataContext } from '../contexts/DataContext';
+import { getCartItems } from '../services/cart';
 
 function Wishlist() {
-  const {
-    itemsInWishList,
-    removeItemFromWishlist,
-    MoveToCartFromWishList,
-    loading,
-  } = useContext(WishListContext);
+  const { wishlistItems, loading, datadispatch, cartItems } = useDataContext();
+  const [itemsInWishList, setItemsinWishList] = useState(wishlistItems);
+
+  useEffect(() => {
+    getWishlistItems(datadispatch);
+    getCartItems(datadispatch);
+  }, []);
+  useEffect(() => {
+    setItemsinWishList(wishlistItems);
+  }, [wishlistItems]);
 
   return (
     <>
@@ -38,7 +49,7 @@ function Wishlist() {
       ) : (
         <div className="flex justify-center min-h-[70vh]">
           <div className="w-2/3 md:w-2/4 m-5 flex items-center flex-col  ">
-            {itemsInWishList.map(item => {
+            {itemsInWishList?.map(item => {
               const { _id, title, categoryName, subCategory, price, imageURL } =
                 item;
               return (
@@ -64,13 +75,15 @@ function Wishlist() {
                     <p className="text-pink-700 font-bold">Rs. {price}/-</p>
                     <button
                       className="bg-pink-700 text-white text-semibold p-3 rounded-lg my-3 "
-                      onClick={() => MoveToCartFromWishList(item)}
+                      onClick={() =>
+                        MoveToCartFromWishList(item, datadispatch, cartItems)
+                      }
                     >
                       Move to cart
                     </button>
                     <button
                       className="text-pink-700 bg-white text-semibold px-3 py-2 rounded-lg border-rose-700 border-2 mx-2"
-                      onClick={() => removeItemFromWishlist(_id)}
+                      onClick={() => removeItemFromWishlist(_id, datadispatch)}
                     >
                       X
                     </button>

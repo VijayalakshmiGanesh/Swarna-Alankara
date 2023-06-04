@@ -1,23 +1,42 @@
-import { useContext } from 'react';
-
-import ProductContext from '../contexts/ProductContext';
+import { useState, useEffect } from 'react';
+import { useDataContext } from '../contexts/DataContext';
 import Loader from '../components/Loader/Loader';
 import ProductCard from '../components/ProductCard';
+import { filterProductData } from '../redux/filterProducts';
+import { getProductsFromAPI } from '../services/products';
 
 function Products() {
-  const { filteredProducts, dispatch, loading, state } =
-    useContext(ProductContext);
+  const {
+    products,
+    filterdispatch,
+    // loading,
+    filterProductState,
+    datadispatch,
+  } = useDataContext();
 
+  const [filteredProducts, setFilteredProducts] = useState(products);
   function HandleFilters(filterType, valueToSend) {
-    dispatch({ type: filterType, payload: valueToSend });
+    filterdispatch({ type: filterType, payload: valueToSend });
   }
+  let loading = false;
+
+  useEffect(() => {
+    getProductsFromAPI(datadispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    loading = true;
+
+    setFilteredProducts(filterProductData(products, filterProductState));
+    loading = false;
+  }, [products, filterProductState]);
 
   return (
     <>
       {loading ? (
         <Loader />
       ) : (
-        <div className="flex  mx-auto py-4 px-2 flex-wrap">
+        <div className="flex  mx-auto py-4 px-2 flex-wrap min-h-[80vh]">
           <div className="w-1/5  mx-auto  text-left px-5 py-5 min-w-fit border-r-2 border-blue-950 border-solid">
             <div className="fixed w-1/6">
               <p className="flex justify-between items-center my-1">
@@ -26,7 +45,7 @@ function Products() {
                 </h3>
                 <button
                   className="text-white bg-pink-700  py-2 px-3 rounded-md w-3/5 font-bold w-fit"
-                  onClick={() => dispatch({ type: 'reset' })}
+                  onClick={() => filterdispatch({ type: 'reset' })}
                 >
                   Reset
                 </button>
@@ -43,7 +62,7 @@ function Products() {
                     onChange={e => {
                       HandleFilters('categoryFilter', e.target.value);
                     }}
-                    checked={state.categoryFilter.includes('Gold')}
+                    checked={filterProductState.categoryFilter.includes('Gold')}
                   />
                   Gold
                 </label>
@@ -55,7 +74,9 @@ function Products() {
                     onChange={e =>
                       HandleFilters('categoryFilter', e.target.value)
                     }
-                    checked={state.categoryFilter.includes('Silver')}
+                    checked={filterProductState.categoryFilter.includes(
+                      'Silver'
+                    )}
                   />
                   Silver
                 </label>
@@ -72,7 +93,9 @@ function Products() {
                     onChange={e =>
                       HandleFilters('subCategoryFilter', e.target.value)
                     }
-                    checked={state.subCategoryFilter.includes('Chains')}
+                    checked={filterProductState.subCategoryFilter.includes(
+                      'Chains'
+                    )}
                   />
                   Chains
                 </label>
@@ -84,7 +107,9 @@ function Products() {
                     onChange={e =>
                       HandleFilters('subCategoryFilter', e.target.value)
                     }
-                    checked={state.subCategoryFilter.includes('Earrings')}
+                    checked={filterProductState.subCategoryFilter.includes(
+                      'Earrings'
+                    )}
                   />
                   Earrings
                 </label>
@@ -96,7 +121,9 @@ function Products() {
                     onChange={e =>
                       HandleFilters('subCategoryFilter', e.target.value)
                     }
-                    checked={state.subCategoryFilter.includes('Ring')}
+                    checked={filterProductState.subCategoryFilter.includes(
+                      'Ring'
+                    )}
                   />
                   Rings
                 </label>
@@ -114,7 +141,7 @@ function Products() {
                     onChange={e =>
                       HandleFilters('ratingsFilter', e.target.value)
                     }
-                    checked={state.ratingsFilter.includes('4.5')}
+                    checked={filterProductState.ratingsFilter.includes('4.5')}
                   />
                   4.5+
                 </label>
@@ -127,7 +154,7 @@ function Products() {
                     onChange={e =>
                       HandleFilters('ratingsFilter', e.target.value)
                     }
-                    checked={state.ratingsFilter.includes('4.0')}
+                    checked={filterProductState.ratingsFilter.includes('4.0')}
                   />
                   4.0+
                 </label>
@@ -140,7 +167,7 @@ function Products() {
                     onChange={e =>
                       HandleFilters('ratingsFilter', e.target.value)
                     }
-                    checked={state.ratingsFilter.includes('3.5')}
+                    checked={filterProductState.ratingsFilter.includes('3.5')}
                   />
                   3.5+
                 </label>
@@ -153,7 +180,7 @@ function Products() {
                     onChange={e =>
                       HandleFilters('ratingsFilter', e.target.value)
                     }
-                    checked={state.ratingsFilter.includes('3.0')}
+                    checked={filterProductState.ratingsFilter.includes('3.0')}
                   />
                   3.0+
                 </label>
@@ -179,7 +206,7 @@ function Products() {
                 min="1"
                 max="100000"
                 step="5000"
-                value={state.priceFilter}
+                value={filterProductState.priceFilter}
                 onChange={e =>
                   HandleFilters('priceFilter', Number(e.target.value))
                 }
@@ -193,7 +220,7 @@ function Products() {
                 <h3>Sort By</h3>
                 <select
                   onChange={e =>
-                    dispatch({ type: 'sort', payload: e.target.value })
+                    filterdispatch({ type: 'sort', payload: e.target.value })
                   }
                 >
                   <option value="recommended">Recommended</option>
@@ -204,7 +231,9 @@ function Products() {
               </span>
             </div>
             {filteredProducts?.length === 0 ? (
-              <p>No products</p>
+              <p className="text-xl text-pink-700 font-semibold">
+                No products to display
+              </p>
             ) : (
               <div className="flex flex-wrap mx-5 justify-center drop-shadow-lg ">
                 {filteredProducts?.map(product => {

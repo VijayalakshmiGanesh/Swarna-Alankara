@@ -1,35 +1,40 @@
-import { useContext, useEffect, useState } from 'react';
-import { CartContext } from '../contexts/CartContext';
-import { NavLink } from 'react-router-dom';
-import { WishListContext } from '../contexts/WishListContext';
+import { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
+import { useDataContext } from '../contexts/DataContext';
+import {
+  MoveToWishListFromCart,
+  addItemToCart,
+  getCartItems,
+  reduceItemQuantity,
+  removeItemFromCart,
+} from '../services/cart';
 
 function Cart() {
-  const {
-    itemsInCart,
-    getCartItems,
-    addItemToCart,
-    removeItemFromCart,
-    reduceItemQuantity,
-    loading,
-  } = useContext(CartContext);
-  const { MoveToWishListFromCart } = useContext(WishListContext);
+  const { datadispatch, cartItems, loading, wishlistItems } = useDataContext();
+  const [itemsInCart, setItemsInCart] = useState(cartItems);
+
+  // const { MoveToWishListFromCart } = useContext(WishListContext);
   const [enteredDiscountCode, setDiscountCode] = useState('');
+  const navigate = useNavigate();
   const totalAmount =
     itemsInCart?.length > 0 &&
     itemsInCart?.reduce((sum, item) => sum + item.qty * item.price, 0);
   const [discountPercent, setDiscountPercent] = useState(0);
   const discountHandler = () => {
-    if (enteredDiscountCode.toUpperCase() === 'NEO15') {
-      setDiscountPercent(0.15);
+    if (enteredDiscountCode.toUpperCase() === 'NEO5') {
+      setDiscountPercent(0.05);
     } else {
       setDiscountPercent(0);
     }
   };
   useEffect(() => {
-    getCartItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getCartItems(datadispatch); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setItemsInCart(cartItems);
+  }, [cartItems]);
   return (
     <div>
       {loading && <Loader />}
@@ -110,14 +115,18 @@ function Cart() {
                           <span className="">
                             <button
                               className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
-                              onClick={() => addItemToCart(item)}
+                              onClick={() =>
+                                addItemToCart(item, datadispatch, itemsInCart)
+                              }
                             >
                               +
                             </button>
                             <span>{qty}</span>
                             <button
                               className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
-                              onClick={() => reduceItemQuantity(item._id, qty)}
+                              onClick={() =>
+                                reduceItemQuantity(item._id, qty, datadispatch)
+                              }
                             >
                               -
                             </button>
@@ -130,13 +139,21 @@ function Cart() {
                           <span className="flex flex-col">
                             <button
                               className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold  my-1 px-2 py-1"
-                              onClick={() => removeItemFromCart(item._id)}
+                              onClick={() =>
+                                removeItemFromCart(item._id, datadispatch)
+                              }
                             >
                               Delete
                             </button>
                             <button
                               className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
-                              onClick={() => MoveToWishListFromCart(item)}
+                              onClick={() =>
+                                MoveToWishListFromCart(
+                                  item,
+                                  datadispatch,
+                                  wishlistItems
+                                )
+                              }
                             >
                               Move to wishlist
                             </button>
@@ -204,7 +221,10 @@ function Cart() {
                     totalAmount * discountPercent
                   )}.00 on this order`}
                 </p>
-                <button className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1">
+                <button
+                  className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
+                  onClick={() => navigate('/checkout')}
+                >
                   CHECKOUT
                 </button>
               </div>

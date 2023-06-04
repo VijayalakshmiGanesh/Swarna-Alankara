@@ -1,15 +1,23 @@
-import { useContext } from 'react';
+import { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import ProductContext from '../contexts/ProductContext';
+import { useDataContext } from '../contexts/DataContext';
+import { getCategoriesFromAPI } from '../services/category';
 
 function Home() {
-  const { dispatch } = useContext(ProductContext);
-  const navigate = useNavigate();
+  const { datadispatch, category, filterdispatch } = useDataContext();
 
+  const navigate = useNavigate();
   const HandleCategory = (filterType, valueToSend) => {
-    dispatch({ type: filterType, payload: valueToSend });
+    filterdispatch({ type: 'reset' });
+    filterdispatch({ type: filterType, payload: valueToSend });
     navigate('/products');
   };
+
+  useEffect(() => {
+    getCategoriesFromAPI(datadispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <section>
@@ -29,35 +37,37 @@ function Home() {
                 to="/products"
                 className="py-3 px-5 rounded-2xl bg-blue-950 text-xl mt-7 "
               >
-                Shop Now &gt;{' '}
+                Shop Now &gt;
               </NavLink>
             </p>
           </div>
         </div>
       </section>
-      <div className="container mx-auto my-5 ">
+      <div className="my-5  pb-7">
         <p className="text-2xl my-5 ">SHOP BY CATEGORY</p>
-        <div className=" flex justify-center  w-full">
-          <section
-            onClick={() => HandleCategory('categoryFilter', 'Gold')}
-            className="hover:cursor-pointer  hover:"
-          >
-            <img
-              src="http://www.fashionteria.com/wp-content/uploads/2021/04/gold-jewelry.jpg"
-              alt="gold section"
-              className="w-[35vw] h-[350px] mx-5 object-cover"
-            />
-          </section>
-          <section
-            onClick={() => HandleCategory('categoryFilter', 'Silver')}
-            className="hover:cursor-pointer"
-          >
-            <img
-              src="https://tse1.mm.bing.net/th?id=OIP.xAZuD-V7vGEYzZ0C2uxSZwHaE5&pid=Api&P=0&h=180"
-              alt="silver section"
-              className="w-[35vw] h-[350px] mx-5 object-cover"
-            />
-          </section>
+        <div className=" flex flex-col md:flex-row justify-center  w-full items-center">
+          {category?.map(categoryItem => {
+            const { _id, categoryName, description, imageUrl } = categoryItem;
+
+            return (
+              <section
+                key={_id}
+                onClick={() => HandleCategory('categoryFilter', categoryName)}
+                className="hover:cursor-pointer  hover:"
+              >
+                <div className="relative">
+                  <img
+                    src={imageUrl}
+                    alt={`${categoryName} section`}
+                    className="w-3/4 md:w-[33vw] h-[300px] mx-5 object-cover"
+                  />
+                  <p className="bg-black/[0.6] absolute bottom-0 text-center w-3/4 md:w-[33vw] mx-5 py-3 text-white font-semibold text-2xl  banner-text">
+                    {description}
+                  </p>
+                </div>
+              </section>
+            );
+          })}
         </div>
       </div>
     </>

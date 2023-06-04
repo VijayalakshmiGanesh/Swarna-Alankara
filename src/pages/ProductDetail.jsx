@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AiOutlineHeart, AiOutlineShoppingCart } from 'react-icons/ai';
 import ReactStars from 'react-stars';
-import { CartContext } from '../contexts/CartContext';
-import { WishListContext } from '../contexts/WishListContext';
 import Loader from '../components/Loader/Loader';
-
+import { AddToCartHander, isItemInCart } from '../services/cart';
+import { useDataContext } from '../contexts/DataContext';
+import { AddToWishlistHander, isItemInWishlist } from '../services/wishlist';
 function ProductDetail() {
   const { id } = useParams();
-  const { isItemInCart, AddToCartHander } = useContext(CartContext);
-  const { isItemInWishlist, AddToWishlistHander } = useContext(WishListContext);
+  const { cartItems, datadispatch, wishlistItems } = useDataContext();
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -101,13 +100,19 @@ function ProductDetail() {
                 <button
                   className="text-white bg-pink-700 px-3 py-1 rounded-lg flex items-center mx-1"
                   onClick={() =>
-                    isItemInCart(_id) === -1
-                      ? AddToCartHander(productToBeDisplayed)
+                    isItemInCart(_id, cartItems) === -1
+                      ? AddToCartHander(
+                          productToBeDisplayed,
+                          datadispatch,
+                          cartItems
+                        )
                       : navigate('/cart')
                   }
                 >
                   <span>
-                    {isItemInCart(_id) === -1 ? 'Add to Cart' : 'Go to Cart'}
+                    {isItemInCart(_id, cartItems) === -1
+                      ? 'Add to Cart'
+                      : 'Go to Cart'}
                   </span>
                   <span>
                     <AiOutlineShoppingCart />
@@ -115,10 +120,16 @@ function ProductDetail() {
                 </button>
                 <button
                   className="flex items-center border-pink-700 text-pink-700 border-2 rounded-lg  px-3 py-1 mx-1"
-                  onClick={() => AddToWishlistHander(productToBeDisplayed)}
+                  onClick={() =>
+                    AddToWishlistHander(
+                      productToBeDisplayed,
+                      datadispatch,
+                      wishlistItems
+                    )
+                  }
                 >
                   <span>
-                    {isItemInWishlist(_id) === -1
+                    {isItemInWishlist(_id, wishlistItems) === -1
                       ? 'Add to Wishlist'
                       : 'Go to Wishlist'}
                   </span>
