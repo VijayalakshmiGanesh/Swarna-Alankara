@@ -1,14 +1,12 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { FiMenu } from 'react-icons/fi';
 import { BiSearchAlt2 } from 'react-icons/bi';
-
-import ProductContext from '../contexts/ProductContext';
+import { useDataContext } from '../contexts/DataContext';
 
 function Header() {
   const [isClicked, setIsClicked] = useState(false);
-  const { dispatch } = useContext(ProductContext);
-
+  const { filterdispatch } = useDataContext();
   const [textToSearch, SetTextToSearch] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,7 +42,7 @@ function Header() {
               />
               <button
                 onClick={() => {
-                  dispatch({ type: 'search', payload: textToSearch });
+                  filterdispatch({ type: 'search', payload: textToSearch });
 
                   pathname !== '/products' && navigate('/products');
                 }}
