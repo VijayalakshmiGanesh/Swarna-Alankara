@@ -14,7 +14,8 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUpPage';
 import { ToastContainer } from 'react-toastify';
 import UserProfile from './pages/UserProfile';
-
+import RequiresAuth from './components/RequiresAuth';
+import Checkout from './pages/Checkout';
 function App() {
   return (
     <div className="App">
@@ -24,12 +25,41 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/product-detail/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
+        <Route
+          path="/cart"
+          element={
+            <RequiresAuth>
+              <Cart />
+            </RequiresAuth>
+          }
+        />
+        <Route
+          path="/wishlist"
+          element={
+            <RequiresAuth>
+              <Wishlist />
+            </RequiresAuth>
+          }
+        />
         <Route path="/apitest" element={<Mockman />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/user-profile" element={<UserProfile />} />
+        <Route
+          path="/user-profile"
+          element={
+            <RequiresAuth>
+              <UserProfile />
+            </RequiresAuth>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <RequiresAuth>
+              <Checkout />
+            </RequiresAuth>
+          }
+        />
       </Routes>
       <ToastContainer
         position="bottom-right"
