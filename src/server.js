@@ -22,15 +22,16 @@ import {
   getWishlistItemsHandler,
   removeItemFromWishlistHandler,
 } from './backend/controllers/WishlistController';
-import { categories } from './backend/db/categories';
-import { products } from './backend/db/products';
-import { users } from './backend/db/users';
+
 import {
-  addAddressHandler,
-  getAddressHandler,
+  addNewAddressHandler,
+  getAllAddressesHandler,
   removeAddressHandler,
   updateAddressHandler,
 } from './backend/controllers/AddressController';
+import { categories } from './backend/db/categories';
+import { products } from './backend/db/products';
+import { users } from './backend/db/users';
 import { v4 as uuid } from 'uuid';
 
 export function makeServer({ environment = 'development' } = {}) {
@@ -45,6 +46,7 @@ export function makeServer({ environment = 'development' } = {}) {
       user: Model,
       cart: Model,
       wishlist: Model,
+      address: Model,
     },
 
     // Runs on the start of the server
@@ -110,8 +112,8 @@ export function makeServer({ environment = 'development' } = {}) {
       );
 
       // address routes (private)
-      this.get('/user/address', getAddressHandler.bind(this));
-      this.post('/user/address', addAddressHandler.bind(this));
+      this.get('/user/address', getAllAddressesHandler.bind(this));
+      this.post('/user/address', addNewAddressHandler.bind(this));
       this.post('/user/address/:addressId', updateAddressHandler.bind(this));
       this.delete('/user/address/:addressId', removeAddressHandler.bind(this));
     },

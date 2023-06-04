@@ -1,18 +1,18 @@
 import { Response } from 'miragejs';
 import { formatDate, requiresAuth } from '../utils/authUtils';
 import { v4 as uuid } from 'uuid';
-
 /**
- * All the routes related to address are present here.
+ * All the routes related to Address are present here.
  * These are private routes.
  * Client needs to add "authorization" header with JWT token in it to access it.
  * */
 
 /**
- * This handler handles getting items to user's address.
- * send GET Request at /api/user/address
+ * This handler handles getting all addresses from user.
+ * send GET Request at /api/user/addresses
  * */
-export const getAddressHandler = function (schema, request) {
+
+export const getAllAddressesHandler = function (schema, request) {
   const userId = requiresAuth.call(this, request);
   if (!userId) {
     new Response(
@@ -23,25 +23,17 @@ export const getAddressHandler = function (schema, request) {
       }
     );
   }
-  const userAddress = schema.users.findBy({
-    _id: userId,
-  }).address;
-  return new Response(
-    200,
-    {},
-    {
-      address: userAddress,
-    }
-  );
+  const userAddresses = schema.users.findBy({ _id: userId }).address;
+  return new Response(200, {}, { address: userAddresses });
 };
 
 /**
- * This handler handles adding items to user's address.
+ * This handler handles adding an address to user.
  * send POST Request at /api/user/address
- * body contains {address}
+ * body contains { address }
  * */
 
-export const addAddressHandler = function (schema, request) {
+export const addNewAddressHandler = function (schema, request) {
   const userId = requiresAuth.call(this, request);
   try {
     if (!userId) {
@@ -90,8 +82,9 @@ export const addAddressHandler = function (schema, request) {
 };
 
 /**
- * This handler handles removing items to user's address.
+ * This handler handles removing an address from user.
  * send DELETE Request at /api/user/address/:addressId
+ *
  * */
 
 export const removeAddressHandler = function (schema, request) {
@@ -138,12 +131,6 @@ export const removeAddressHandler = function (schema, request) {
     );
   }
 };
-
-/**
- * This handler handles adding items to user's address.
- * send POST Request at /api/user/address/:addressId
- *
- * */
 
 export const updateAddressHandler = function (schema, request) {
   const addressId = request.params.addressId;
