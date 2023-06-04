@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { notifyError, notifySuccess } from '../components/Toasters';
 
 export const AuthContext = createContext();
 
@@ -29,11 +30,13 @@ export function AuthProvider({ children }) {
         setHasErrorOccured(false);
         setLoggedInUserDetails(JSON.parse(response._bodyInit).foundUser);
         navigate('/products');
+        notifySuccess('Login Successful...');
       } else {
-        // console.log(response)
+        console.log(response);
         if (response.statusText === 'Not Found') {
           setHasErrorOccured(true);
           setIsUserLoggedIn(false);
+          notifyError('User credentials not found');
         }
       }
       console.log(response);
@@ -66,10 +69,13 @@ export function AuthProvider({ children }) {
           JSON.parse(response._bodyInit).encodedToken
         );
         setIsUserLoggedIn(true);
+        setLoggedInUserDetails(JSON.parse(response._bodyInit).createdUser);
+
         navigate('/products');
+        notifySuccess('Sign up Successfull');
       } else {
-        console.log(response);
         setIsUserLoggedIn(false);
+        notifyError(JSON.parse(response._bodyInit).errors[0]);
       }
     } catch (e) {
       console.log(e);
@@ -83,6 +89,7 @@ export function AuthProvider({ children }) {
         SignUpHander,
         isUserLoggedIn,
         loggedInUserDetails,
+        setIsUserLoggedIn,
       }}
     >
       {children}
