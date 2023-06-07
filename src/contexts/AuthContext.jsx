@@ -1,6 +1,8 @@
 import { createContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { notifyError, notifySuccess } from '../components/Toasters';
+import { getCartItems } from '../services/cart';
+import { getWishlistItems } from '../services/wishlist';
 
 export const AuthContext = createContext();
 
@@ -9,7 +11,8 @@ export function AuthProvider({ children }) {
   const [hasErrorOccured, setHasErrorOccured] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [loggedInUserDetails, setLoggedInUserDetails] = useState({});
-  const LoginHandler = async (enteredEmail, enteredPassword) => {
+
+  const LoginHandler = async (enteredEmail, enteredPassword, datadispatch) => {
     setIsUserLoggedIn('false');
     try {
       const response = await fetch('/api/auth/login', {
@@ -31,6 +34,8 @@ export function AuthProvider({ children }) {
         setLoggedInUserDetails(JSON.parse(response._bodyInit).foundUser);
         navigate('/products');
         notifySuccess('Login Successful...');
+        getCartItems(datadispatch);
+        getWishlistItems(datadispatch);
       } else {
         console.log(response);
         if (response.statusText === 'Not Found') {
@@ -39,7 +44,6 @@ export function AuthProvider({ children }) {
           notifyError('User credentials not found');
         }
       }
-      console.log(response);
     } catch (e) {
       console.log(e);
     }

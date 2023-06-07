@@ -2,12 +2,14 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { NavLink } from 'react-router-dom';
 import { BiShow, BiHide } from 'react-icons/bi';
+import { useDataContext } from '../contexts/DataContext';
 
 function Login() {
   const [emailEntered, setEmailEntered] = useState('');
   const [passwordEntered, setPasswordEntered] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { LoginHandler, hasErrorOccured } = useContext(AuthContext);
+  const { datadispatch } = useDataContext();
 
   const TestCredshandler = () => {
     setEmailEntered('adarshbalika@gmail.com');
@@ -59,7 +61,9 @@ function Login() {
             <div className="flex mb-5 ">
               <button
                 className="w-full text-white bg-pink-700 mx-1 p-3 rounded-md font-bold"
-                onClick={() => LoginHandler(emailEntered, passwordEntered)}
+                onClick={() =>
+                  LoginHandler(emailEntered, passwordEntered, datadispatch)
+                }
               >
                 Sign in
               </button>
