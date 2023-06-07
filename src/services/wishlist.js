@@ -33,30 +33,30 @@ export const addItemToWishlist = async (
   dataDispatch,
   itemsInWishList
 ) => {
-  const isItemFound = isItemInWishlist(
-    productToAddWishlist._id,
-    itemsInWishList
-  );
-  if (isItemFound === -1) {
-    dataDispatch({ type: 'setLoading', payload: 'true' });
-    try {
-      const response = await fetch('/api/user/wishlist', {
-        method: 'POST',
-        headers: {
-          authorization: localStorage.getItem('key'),
-        },
-        body: JSON.stringify({ product: productToAddWishlist }),
-      });
-      if (response.status === 201) {
-        // setShowAlert(true);
-        notifySuccess('Product added to wishlist');
-      }
-    } catch (e) {
-      console.log(e);
-    } finally {
-      dataDispatch({ type: 'setLoading', payload: 'false' });
+  // const isItemFound = isItemInWishlist(
+  //   productToAddWishlist._id,
+  //   itemsInWishList
+  // );
+  // if (isItemFound === -1) {
+  dataDispatch({ type: 'setLoading', payload: 'true' });
+  try {
+    const response = await fetch('/api/user/wishlist', {
+      method: 'POST',
+      headers: {
+        authorization: localStorage.getItem('key'),
+      },
+      body: JSON.stringify({ product: productToAddWishlist }),
+    });
+    if (response.status === 201) {
+      // setShowAlert(true);
+      notifySuccess('Product added to wishlist');
     }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    dataDispatch({ type: 'setLoading', payload: 'false' });
   }
+  // }
   //   else {
   //     navigate('/wishlist');
   //   }

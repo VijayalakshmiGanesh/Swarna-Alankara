@@ -54,13 +54,13 @@ function ProductCard({ product }) {
   }
 
   function AddToWishlistHander(producttoAddorRemove, operation) {
-    // if (isUserLoggedIn) {
-    operation === 'add'
-      ? addItemToWishlist(producttoAddorRemove, datadispatch, wishlistItems)
-      : removeItemFromWishlist(producttoAddorRemove._id, datadispatch);
-    // } else {
-    //   navigate('/login');
-    // }
+    if (isUserLoggedIn) {
+      operation === 'add'
+        ? addItemToWishlist(producttoAddorRemove, datadispatch, wishlistItems)
+        : removeItemFromWishlist(producttoAddorRemove._id, datadispatch);
+    } else {
+      navigate('/login');
+    }
   }
   const { _id, title, imageURL, price, rating } = product;
   return (

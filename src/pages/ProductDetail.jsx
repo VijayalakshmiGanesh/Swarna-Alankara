@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AiOutlineHeart, AiOutlineShoppingCart } from 'react-icons/ai';
 import ReactStars from 'react-stars';
@@ -6,9 +6,11 @@ import Loader from '../components/Loader/Loader';
 import { AddToCartHander, isItemInCart } from '../services/cart';
 import { useDataContext } from '../contexts/DataContext';
 import { AddToWishlistHander, isItemInWishlist } from '../services/wishlist';
+import { AuthContext } from '../contexts/AuthContext';
 function ProductDetail() {
   const { id } = useParams();
   const { cartItems, datadispatch, wishlistItems } = useDataContext();
+  const { isUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -120,13 +122,19 @@ function ProductDetail() {
                 </button>
                 <button
                   className="flex items-center border-pink-700 text-pink-700 border-2 rounded-lg  px-3 py-1 mx-1"
-                  onClick={() =>
-                    AddToWishlistHander(
-                      productToBeDisplayed,
-                      datadispatch,
-                      wishlistItems
-                    )
-                  }
+                  onClick={() => {
+                    if (isUserLoggedIn) {
+                      isItemInWishlist(_id, wishlistItems) === -1
+                        ? AddToWishlistHander(
+                            productToBeDisplayed,
+                            datadispatch,
+                            wishlistItems
+                          )
+                        : navigate('/wishlist');
+                    } else {
+                      navigate('/login');
+                    }
+                  }}
                 >
                   <span>
                     {isItemInWishlist(_id, wishlistItems) === -1
