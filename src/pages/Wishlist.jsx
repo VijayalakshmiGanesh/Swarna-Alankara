@@ -4,22 +4,21 @@ import { NavLink } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
 import {
   MoveToCartFromWishList,
-  getWishlistItems,
   removeItemFromWishlist,
 } from '../services/wishlist';
 import { useDataContext } from '../contexts/DataContext';
-import { getCartItems } from '../services/cart';
 
 function Wishlist() {
-  const { wishlistItems, loading, datadispatch, cartItems } = useDataContext();
+  const { wishlistItems, loading, datadispatch, cartItems, setLoading } =
+    useDataContext();
   const [itemsInWishList, setItemsinWishList] = useState(wishlistItems);
 
   useEffect(() => {
-    getWishlistItems(datadispatch);
-    getCartItems(datadispatch);
-  }, []);
-  useEffect(() => {
+    setLoading(true);
     setItemsinWishList(wishlistItems);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, [wishlistItems]);
 
   return (
@@ -27,7 +26,7 @@ function Wishlist() {
       {/* <h1>Wishlist</h1> */}
       {loading && <Loader />}
       {itemsInWishList.length === 0 ? (
-        <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row min-h-[100vh]">
+        <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row min-h-[70vh]">
           <img
             src="../assests/emptyWishList.svg"
             alt="empty wishlist"

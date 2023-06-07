@@ -5,16 +5,21 @@ import { useDataContext } from '../contexts/DataContext';
 import {
   MoveToWishListFromCart,
   addItemToCart,
-  getCartItems,
   reduceItemQuantity,
   removeItemFromCart,
 } from '../services/cart';
 
 function Cart() {
-  const { datadispatch, cartItems, loading, wishlistItems } = useDataContext();
+  const {
+    datadispatch,
+    cartItems,
+    loading,
+    wishlistItems,
+    setLoading,
+    discountAmount,
+  } = useDataContext();
   const [itemsInCart, setItemsInCart] = useState(cartItems);
 
-  // const { MoveToWishListFromCart } = useContext(WishListContext);
   const [enteredDiscountCode, setDiscountCode] = useState('');
   const navigate = useNavigate();
   const totalAmount =
@@ -27,19 +32,26 @@ function Cart() {
     } else {
       setDiscountPercent(0);
     }
+    datadispatch({
+      type: 'setDiscount',
+      payload: Math.round(totalAmount * discountPercent),
+    });
   };
-  useEffect(() => {
-    getCartItems(datadispatch); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
+    setLoading(() => true);
     setItemsInCart(cartItems);
+    setTimeout(() => {
+      setLoading(() => false);
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
   return (
     <div>
-      {loading && <Loader />}
-      {itemsInCart?.length === 0 ? (
-        <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row">
+      {loading ? (
+        <Loader />
+      ) : itemsInCart?.length === 0 ? (
+        <div className="flex justify-center items-center py-2 my-2 md:my-5 md:py-5 flex-col md:flex-row min-h-[70vh]">
           <img
             src="../assests/emptyCart.svg"
             height="500"
@@ -185,9 +197,7 @@ function Cart() {
                   </p>
                   <p className="flex justify-between">
                     <span>Coupon discount</span>
-                    <span>
-                      ₹ {Math.round(totalAmount * discountPercent)}.00
-                    </span>
+                    <span>₹ {discountAmount}.00</span>
                   </p>
                 </div>
                 <p className="flex justify-between py-3">
@@ -212,18 +222,22 @@ function Cart() {
                 <p className="border-y-4 border-solid border-blue-950 p-3 font-bold flex justify-between text-blue-950 mb-3">
                   <span>TOTAL AMOUNT</span>
                   <span>
-                    ₹ {Math.round(totalAmount - totalAmount * discountPercent)}
+                    ₹ {Math.round(totalAmount - discountAmount)}
                     .00
                   </span>
                 </p>
                 <p className="text-pink-700 font-semibold py-3">
-                  {`You will save ₹ ${Math.round(
-                    totalAmount * discountPercent
-                  )}.00 on this order`}
+                  {`You will save ₹ ${discountAmount}.00 on this order`}
                 </p>
                 <button
                   className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
-                  onClick={() => navigate('/checkout')}
+                  onClick={() => {
+                    datadispatch({
+                      type: 'setTotalPrice',
+                      payload: totalAmount,
+                    });
+                    navigate('/checkout');
+                  }}
                 >
                   CHECKOUT
                 </button>
