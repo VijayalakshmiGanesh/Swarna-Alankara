@@ -75,6 +75,7 @@ function ProductDetail() {
                     value={rating}
                     size={24}
                     color2={'#efa939'}
+                    disabledf
                   />
                 </span>
                 <span className="px-1">({rating})</span>
@@ -101,15 +102,19 @@ function ProductDetail() {
               <p className="my-2 flex font-semibold self-end ">
                 <button
                   className="text-white bg-pink-700 px-3 py-1 rounded-lg flex items-center mx-1"
-                  onClick={() =>
-                    isItemInCart(_id, cartItems) === -1
-                      ? AddToCartHander(
-                          productToBeDisplayed,
-                          datadispatch,
-                          cartItems
-                        )
-                      : navigate('/cart')
-                  }
+                  onClick={() => {
+                    if (isUserLoggedIn) {
+                      isItemInCart(_id, cartItems) === -1
+                        ? AddToCartHander(
+                            productToBeDisplayed,
+                            datadispatch,
+                            cartItems
+                          )
+                        : navigate('/cart');
+                    } else {
+                      navigate('/login');
+                    }
+                  }}
                 >
                   <span>
                     {isItemInCart(_id, cartItems) === -1
