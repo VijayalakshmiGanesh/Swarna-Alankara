@@ -8,6 +8,7 @@ import {
   deleteAddressFromAddressBook,
   getAddressFromAPI,
 } from '../services/address';
+import { notifySuccess } from '../components/Toasters';
 // import { NavLink } from 'react-router-dom';
 
 function UserProfile() {
@@ -117,6 +118,8 @@ function UserProfile() {
                   onClick={() => {
                     setIsUserLoggedIn(prev => !prev);
                     navigate(location?.state?.from?.pathname);
+                    datadispatch({ type: 'logout' });
+                    notifySuccess('Logged out successfully');
                     localStorage.clear();
                   }}
                 >
