@@ -37,6 +37,13 @@ export const dataReducer = (result, action) => {
         orderHistory: [...result.orderHistory, action.payload],
       };
 
+    case 'logout':
+      return {
+        ...result,
+        cartList: [],
+        wishList: [],
+      };
+
     default:
       return result;
   }
