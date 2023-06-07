@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDataContext } from '../contexts/DataContext';
 import { removeItemFromCart } from '../services/cart';
 function OrderSummary() {
@@ -13,6 +13,7 @@ function OrderSummary() {
   };
   useEffect(() => {
     clearItemsHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
