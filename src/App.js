@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import UserProfile from './pages/UserProfile';
 import RequiresAuth from './components/RequiresAuth';
 import Checkout from './pages/Checkout';
+import OrderSummary from './pages/OrderSummary';
 function App() {
   return (
     <div className="App">
@@ -57,6 +58,14 @@ function App() {
           element={
             <RequiresAuth>
               <Checkout />
+            </RequiresAuth>
+          }
+        />
+        <Route
+          path="/orderSummary"
+          element={
+            <RequiresAuth>
+              <OrderSummary />
             </RequiresAuth>
           }
         />
