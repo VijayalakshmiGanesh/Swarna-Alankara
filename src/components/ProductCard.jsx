@@ -1,35 +1,66 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import { useContext } from 'react';
-import { CartContext } from '../contexts/CartContext';
-import { WishListContext } from '../contexts/WishListContext';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
+import { addItemToCart, isItemInCart } from '../services/cart';
+import { useDataContext } from '../contexts/DataContext';
+import {
+  addItemToWishlist,
+  removeItemFromWishlist,
+  isItemInWishlist,
+} from '../services/wishlist';
 
 function ProductCard({ product }) {
   const { isUserLoggedIn } = useContext(AuthContext);
-  const { addItemToCart, isItemInCart } = useContext(CartContext);
+  const { cartItems, datadispatch, wishlistItems } = useDataContext();
   const navigate = useNavigate();
+  const [disabledButtons, setDisabledButtons] = useState([]);
+  const [wishlistDisabledButtons, setWishListDisabledButtons] = useState([]);
 
-  const { isItemInWishlist, addItemToWishlist, removeItemFromWishlist } =
-    useContext(WishListContext);
+  const handleButtonClick = buttonId => {
+    // Check if the button is already disabled
+    if (!disabledButtons.includes(buttonId)) {
+      // Disable the button
+      setDisabledButtons([...disabledButtons, buttonId]);
 
+      // Enable the button after 1 second
+      setTimeout(() => {
+        setDisabledButtons(disabledButtons.filter(btnId => btnId !== buttonId));
+      }, 1000);
+    }
+  };
+
+  const handleWishlistButtonClick = buttonId => {
+    // Check if the button is already disabled
+    if (!wishlistDisabledButtons.includes(buttonId)) {
+      // Disable the button
+      setWishListDisabledButtons([...wishlistDisabledButtons, buttonId]);
+
+      // Enable the button after 1 second
+      setTimeout(() => {
+        setWishListDisabledButtons(
+          wishlistDisabledButtons.filter(btnId => btnId !== buttonId)
+        );
+      }, 1000);
+    }
+  };
   function AddToCartHander(producttoAddinCart) {
     if (isUserLoggedIn) {
-      addItemToCart(producttoAddinCart);
+      addItemToCart(producttoAddinCart, datadispatch, cartItems);
     } else {
       navigate('/login');
     }
   }
 
   function AddToWishlistHander(producttoAddorRemove, operation) {
-    if (isUserLoggedIn) {
-      operation === 'add'
-        ? addItemToWishlist(producttoAddorRemove)
-        : removeItemFromWishlist(producttoAddorRemove._id);
-    } else {
-      navigate('/login');
-    }
+    // if (isUserLoggedIn) {
+    operation === 'add'
+      ? addItemToWishlist(producttoAddorRemove, datadispatch, wishlistItems)
+      : removeItemFromWishlist(producttoAddorRemove._id, datadispatch);
+    // } else {
+    //   navigate('/login');
+    // }
   }
   const { _id, title, imageURL, price, rating } = product;
   return (
@@ -57,25 +88,31 @@ function ProductCard({ product }) {
 
       <p className="flex justify-center items-center w-full py-2">
         <button
+          key={_id}
           className="text-white bg-pink-700  p-3 rounded-md w-3/5 font-bold"
-          onClick={() =>
-            isItemInCart(_id) === -1
+          disabled={disabledButtons.includes(_id)}
+          onClick={() => {
+            isItemInCart(_id, cartItems) === -1
               ? AddToCartHander(product)
-              : navigate('/cart')
-          }
+              : navigate('/cart');
+            handleButtonClick(_id);
+          }}
         >
-          {isItemInCart(_id) === -1 ? 'Add To Cart' : 'Go To Cart'}
+          {isItemInCart(_id, cartItems) === -1 ? 'Add To Cart' : 'Go To Cart'}
         </button>
         <button
+          key={_id}
           className=""
-          onClick={() =>
+          disabled={wishlistDisabledButtons.includes(_id)}
+          onClick={() => {
             AddToWishlistHander(
               product,
-              isItemInWishlist(_id) === -1 ? 'add' : 'remove'
-            )
-          }
+              isItemInWishlist(_id, wishlistItems) === -1 ? 'add' : 'remove'
+            );
+            handleWishlistButtonClick(_id);
+          }}
         >
-          {isItemInWishlist(_id) === -1 ? (
+          {isItemInWishlist(_id, wishlistItems) === -1 ? (
             <AiOutlineHeart
               style={{
                 border: '2px solid rgb(190 24 93)',
