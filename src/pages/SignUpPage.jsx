@@ -2,10 +2,12 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { NavLink } from 'react-router-dom';
 import { BiShow, BiHide } from 'react-icons/bi';
+import { notifyError } from '../components/Toasters';
 
 function SignUp() {
   const [emailEntered, setEmailEntered] = useState('');
   const [passwordEntered, setPasswordEntered] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +19,7 @@ function SignUp() {
       <div className="flex justify-center items-center flex-col ">
         <div className=" my-16 py-5 px-7 drop-shadow-lg w-[370px] border-2 border-solid border-gray-50 shadow-lg">
           <p className="text-2xl font-semibold">Sign Up</p>
-          <p className="text-gray-400 text-xs">
+          <p className="text-gray-400 text-xs text-center">
             Please signup by entering the details below
           </p>
 
@@ -68,11 +70,29 @@ function SignUp() {
                 </button>
               </div>
             </label>
+            <label className="flex flex-col my-5 my-5 ">
+              <span className="text-xs text-left">Confirm Password</span>
+              <div className=" flex items-center">
+                <input
+                  type="password"
+                  placeholder="********"
+                  className="text-left w-full border-gray-500 px-4 py-3 focus-visible:border-gray-800"
+                  onChange={e => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </label>
 
             <button
               className="mb-5 text-white bg-pink-700 mx-1 p-3 rounded-md w-full font-bold"
               onClick={() =>
-                SignUpHander(emailEntered, passwordEntered, firstName, lastName)
+                passwordEntered === confirmPassword
+                  ? SignUpHander(
+                      emailEntered,
+                      passwordEntered,
+                      firstName,
+                      lastName
+                    )
+                  : notifyError('Password not matching')
               }
             >
               Create account
