@@ -3,32 +3,23 @@ import { useDataContext } from '../contexts/DataContext';
 import Loader from '../components/Loader/Loader';
 import ProductCard from '../components/ProductCard';
 import { filterProductData } from '../redux/filterProducts';
-import { getProductsFromAPI } from '../services/products';
 
 function Products() {
-  const {
-    products,
-    filterdispatch,
-    // loading,
-    filterProductState,
-    datadispatch,
-  } = useDataContext();
+  const { products, filterdispatch, loading, filterProductState, setLoading } =
+    useDataContext();
 
   const [filteredProducts, setFilteredProducts] = useState(products);
   function HandleFilters(filterType, valueToSend) {
     filterdispatch({ type: filterType, payload: valueToSend });
   }
-  let loading = false;
 
   useEffect(() => {
-    getProductsFromAPI(datadispatch);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    loading = true;
-
+    setLoading(() => true);
     setFilteredProducts(filterProductData(products, filterProductState));
-    loading = false;
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products, filterProductState]);
 
   return (
