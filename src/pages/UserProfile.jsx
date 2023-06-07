@@ -117,6 +117,7 @@ function UserProfile() {
                   onClick={() => {
                     setIsUserLoggedIn(prev => !prev);
                     navigate(location?.state?.from?.pathname);
+                    localStorage.clear();
                   }}
                 >
                   Logout
