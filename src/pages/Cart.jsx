@@ -26,6 +26,7 @@ function Cart() {
     itemsInCart?.length > 0 &&
     itemsInCart?.reduce((sum, item) => sum + item.qty * item.price, 0);
   const [discountPercent, setDiscountPercent] = useState(0);
+
   const discountHandler = () => {
     if (enteredDiscountCode.toUpperCase() === 'NEO5') {
       setDiscountPercent(0.05);
@@ -206,6 +207,7 @@ function Cart() {
                     placeholder="Enter code"
                     className="border-2 border-solid border-slate-200 p-2 rounded-lg"
                     onChange={e => setDiscountCode(e.target.value)}
+                    disabled={discountPercent > 1 ? true : false}
                   />
                   <button
                     className="rounded-lg bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-2"
@@ -214,7 +216,7 @@ function Cart() {
                       enteredDiscountCode.trim() !== '' &&
                       discountHandler()
                     }
-                    disabled={discountPercent > 0 ? true : false}
+                    disabled={discountPercent > 1 ? true : false}
                   >
                     Apply Coupon
                   </button>
