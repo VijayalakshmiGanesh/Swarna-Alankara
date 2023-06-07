@@ -95,7 +95,7 @@ export const removeItemFromCart = async (
       }
     );
     if (response.status === 200) {
-      notifySuccess('Product removed from cart');
+      // notifySuccess('Product removed from cart');
     }
   } catch (e) {
     console.log(e);
