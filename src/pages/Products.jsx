@@ -50,8 +50,9 @@ function Products() {
                     onChange={e =>
                       filterdispatch({ type: 'sort', payload: e.target.value })
                     }
+                    value={filterProductState.sortData}
                   >
-                    <option value="recommended" disabled>
+                    <option value="recommended" selected>
                       Recommended
                     </option>
                     <option value="lowToHigh">Price (Low to High)</option>
@@ -233,7 +234,9 @@ function Products() {
                           onChange={e =>
                             HandleFilters('ratingsFilter', e.target.value)
                           }
-                          defaultChecked
+                          checked={filterProductState.ratingsFilter.includes(
+                            'all'
+                          )}
                         />
                         All
                       </label>
@@ -242,16 +245,21 @@ function Products() {
                   <p className="tracking-wide text-pink-700 font-semibold uppercase py-2">
                     Price
                   </p>
-                  <input
-                    type="range"
-                    min="1"
-                    max="100000"
-                    step="5000"
-                    value={filterProductState.priceFilter}
-                    onChange={e =>
-                      HandleFilters('priceFilter', Number(e.target.value))
-                    }
-                  ></input>
+                  <p className="flex items-center justify-center">
+                    <input
+                      type="range"
+                      min="1"
+                      max="100000"
+                      step="5000"
+                      value={filterProductState.priceFilter}
+                      onChange={e =>
+                        HandleFilters('priceFilter', Number(e.target.value))
+                      }
+                    ></input>
+                    <span className="px-1 border border-2 mx-1">
+                      {filterProductState.priceFilter}
+                    </span>
+                  </p>
                 </div>
               </div>
             </div>
