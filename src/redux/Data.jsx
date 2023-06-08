@@ -42,6 +42,7 @@ export const dataReducer = (result, action) => {
         ...result,
         cartList: [],
         wishList: [],
+        addressToDeliver: [],
       };
 
     default:
