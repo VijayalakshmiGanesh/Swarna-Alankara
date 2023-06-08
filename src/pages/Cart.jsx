@@ -74,112 +74,118 @@ function Cart() {
       ) : (
         <>
           <div className="flex p-2 justify-center my-5 flex-col md:flex-row ">
-            <table class="table-fixed border-spacing-x-2 border-spacing-y-3 border-separate border-2 border-gray-200 border-solid">
-              <thead>
-                <tr className="py-1 border-b-2 border-solid border-zinc-700">
-                  <th>Item</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th className="text-white">Operations</th>
-                </tr>
-              </thead>
-              <tbody>
-                <>
-                  {itemsInCart.map(item => {
-                    const {
-                      title,
-                      qty,
-                      subCategory,
-                      price,
-                      weight,
-                      _id,
-                      imageURL,
-                    } = item;
+            <div className="overflow-auto">
+              <table class="table-fixed border-spacing-x-8 md:border-spacing-x-2 border-spacing-y-3 border-separate border-2 border-gray-200 border-solid snap-x ">
+                <thead>
+                  <tr className="md:py-1 border-b-2 border-solid border-zinc-700">
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th className="text-white">Operations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <>
+                    {itemsInCart.map(item => {
+                      const {
+                        title,
+                        qty,
+                        subCategory,
+                        price,
+                        weight,
+                        _id,
+                        imageURL,
+                      } = item;
 
-                    return (
-                      <tr
-                        className="border-2 border-solid  border-gray-500 border border-slate-600"
-                        key={_id}
-                      >
-                        <td className="w-2/5">
-                          <NavLink
-                            to={`/product-detail/${_id}`}
-                            className=" flex items-center"
-                          >
-                            <img
-                              src={imageURL}
-                              alt={`${title} thumbnail`}
-                              className="h-[100px] w-[100px] object-cover min-w-[100px]"
-                            />
-                            <div className="flex flex-col px-2 text-left">
-                              <p className="text-blue-950 font-semibold">
-                                {title}
-                              </p>
-                              <p className="text-xs ">{subCategory}</p>
-                              <p className="text-xs ">{weight} grams</p>
-                            </div>
-                          </NavLink>
-                        </td>
-                        <td className="text-pink-700 font-semibold">
-                          Rs.{price}/-
-                        </td>
-                        <td>
-                          <span className="">
-                            <button
-                              className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
-                              onClick={() =>
-                                addItemToCart(item, datadispatch, itemsInCart)
-                              }
+                      return (
+                        <tr
+                          className="border-2 border-solid  border-gray-500 border border-slate-600"
+                          key={_id}
+                        >
+                          <td className="w-2/5">
+                            <NavLink
+                              to={`/product-detail/${_id}`}
+                              className=" flex flex-col md:flex-row items-center"
                             >
-                              +
-                            </button>
-                            <span>{qty}</span>
-                            <button
-                              className="px-1 bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
-                              onClick={() =>
-                                reduceItemQuantity(item._id, qty, datadispatch)
-                              }
-                            >
-                              -
-                            </button>
-                          </span>
-                        </td>
-                        <td className="text-pink-700 font-semibold">
-                          Rs.{qty * price}/-
-                        </td>
-                        <td>
-                          <span className="flex flex-col">
-                            <button
-                              className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold  my-1 px-2 py-1"
-                              onClick={() =>
-                                removeItemFromCart(item._id, datadispatch)
-                              }
-                            >
-                              Delete
-                            </button>
-                            <button
-                              className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
-                              onClick={() =>
-                                MoveToWishListFromCart(
-                                  item,
-                                  datadispatch,
-                                  wishlistItems
-                                )
-                              }
-                            >
-                              Move to wishlist
-                            </button>
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </>
-              </tbody>
-            </table>
-            <div className="mx-4">
-              <div className=" rounded-lg shadow-lg my-1 mx-2 w-[23rem] p-5">
+                              <img
+                                src={imageURL}
+                                alt={`${title} thumbnail`}
+                                className="h-[100px] w-[100px] object-cover min-w-[100px]"
+                              />
+                              <div className="flex flex-col px-2 text-left">
+                                <p className="text-blue-950 font-semibold">
+                                  {title}
+                                </p>
+                                <p className="text-xs ">{subCategory}</p>
+                                <p className="text-xs ">{weight} grams</p>
+                              </div>
+                            </NavLink>
+                          </td>
+                          <td className="text-pink-700 font-semibold">
+                            Rs.{price}/-
+                          </td>
+                          <td>
+                            <span className="flex items-center">
+                              <button
+                                className=" bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
+                                onClick={() =>
+                                  addItemToCart(item, datadispatch, itemsInCart)
+                                }
+                              >
+                                +
+                              </button>
+                              <span>{qty}</span>
+                              <button
+                                className=" bg-blue-900 text-white py-1 px-2 rounded-xl mx-2 min-w-[25px] font-bold"
+                                onClick={() =>
+                                  reduceItemQuantity(
+                                    item._id,
+                                    qty,
+                                    datadispatch
+                                  )
+                                }
+                              >
+                                -
+                              </button>
+                            </span>
+                          </td>
+                          <td className="text-pink-700 font-semibold">
+                            Rs.{qty * price}/-
+                          </td>
+                          <td>
+                            <span className="flex flex-col">
+                              <button
+                                className="rounded-lg w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold  my-1 px-2 py-1"
+                                onClick={() =>
+                                  removeItemFromCart(item._id, datadispatch)
+                                }
+                              >
+                                Delete
+                              </button>
+                              <button
+                                className="rounded-lg w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
+                                onClick={() =>
+                                  MoveToWishListFromCart(
+                                    item,
+                                    datadispatch,
+                                    wishlistItems
+                                  )
+                                }
+                              >
+                                Move to wishlist
+                              </button>
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </>
+                </tbody>
+              </table>
+            </div>
+            <div className="md:mx-4">
+              <div className=" rounded-lg shadow-lg my-3 md:my-1 md:mx-2 w-[23rem] p-5">
                 <p className="border-y-4 border-solid border-blue-950 p-3 font-bold text-blue-950 my-3">
                   PRICE DETAILS
                 </p>

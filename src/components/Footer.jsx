@@ -1,9 +1,9 @@
 function Footer() {
   return (
     <>
-      <div className="bg-blue-950 text-white container  px-5 py-3 mt-5">
-        <div className="flex justify-around text-left items-end">
-          <ul>
+      <div className="bg-blue-950 text-white  px-5 py-3 mt-5">
+        <div className="flex flex-col justify-center text-left sm:flex-row sm:items-end sm:justify-around">
+          <ul className="my-1">
             <img
               src="../../assests/logo1-removebg-preview.png"
               alt="logo"
@@ -15,26 +15,28 @@ function Footer() {
             <li>Terms of Use</li>
             <li>© 2023 SWARNA ALANKARA</li>
           </ul>
-          <ul>
+          <ul className="my-1">
             <li>Connect</li>
             <li>
-              <a href="/">GitHub</a>
+              <a href="https://github.com/VijayalakshmiGanesh">GitHub</a>
             </li>
             <li>
-              <a href="/">Twitter</a>
+              <a href="https://twitter.com/VIJAYALAKSHMIG4">Twitter</a>
             </li>
             <li>
-              <a href="/">LinkedIn</a>
+              <a href="https://www.linkedin.com/in/vijayalakshmi-g-182a061a9">
+                LinkedIn
+              </a>
             </li>
           </ul>
-          <ul>
+          <ul className="my-1">
             <li>Resources</li>
 
             <li>
-              <a href="/">Sign Up</a>
+              <a href="/signup">Sign Up</a>
             </li>
             <li>
-              <a href="/">Sign In</a>
+              <a href="/login">Sign In</a>
             </li>
             <li>
               <a href="/" className="invisible">
