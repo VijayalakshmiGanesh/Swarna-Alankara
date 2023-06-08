@@ -3,6 +3,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { NavLink } from 'react-router-dom';
 import { BiShow, BiHide } from 'react-icons/bi';
 import { useDataContext } from '../contexts/DataContext';
+import { validateEmail, validateNonEmptyText } from '../regexValidations';
 
 function Login() {
   const [emailEntered, setEmailEntered] = useState('');
@@ -11,6 +12,11 @@ function Login() {
   const { LoginHandler, hasErrorOccured } = useContext(AuthContext);
   const { datadispatch } = useDataContext();
 
+  const inputValidations = () => {
+    return validateEmail(emailEntered) && validateNonEmptyText(passwordEntered)
+      ? true
+      : false;
+  };
   const TestCredshandler = () => {
     setEmailEntered('adarshbalika@gmail.com');
     setPasswordEntered('adarshbalika');
@@ -62,6 +68,7 @@ function Login() {
               <button
                 className="w-full text-white bg-pink-700 mx-1 p-3 rounded-md font-bold"
                 onClick={() =>
+                  inputValidations() &&
                   LoginHandler(emailEntered, passwordEntered, datadispatch)
                 }
               >

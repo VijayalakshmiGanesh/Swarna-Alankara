@@ -6,6 +6,12 @@ import {
   getAddressFromAPI,
   updateAddressInAddressBook,
 } from '../services/address';
+import {
+  validateNonEmptyText,
+  validatePhoneNumber,
+  validatePinCode,
+  validateText,
+} from '../regexValidations';
 
 function AddAddressForm({ AddressToBeUpdated }) {
   const initialAddress = {
@@ -23,6 +29,17 @@ function AddAddressForm({ AddressToBeUpdated }) {
 
   const { datadispatch } = useDataContext();
 
+  const validateForm = () => {
+    return validateText(newAddressToBeAdded.name) &&
+      validateNonEmptyText(newAddressToBeAdded.street) &&
+      validateText(newAddressToBeAdded.city) &&
+      validateText(newAddressToBeAdded.state) &&
+      validateText(newAddressToBeAdded.country) &&
+      validatePinCode(newAddressToBeAdded.zipCode) &&
+      validatePhoneNumber(newAddressToBeAdded.mobile)
+      ? true
+      : false;
+  };
   useEffect(() => {
     getAddressFromAPI(datadispatch);
     if (AddressToBeUpdated !== 0) {
@@ -36,7 +53,7 @@ function AddAddressForm({ AddressToBeUpdated }) {
         <p className="text-2xl font-semibold text-center">
           {AddressToBeUpdated !== 0 ? 'Edit Address' : 'Add new address'}
         </p>
-        <p className="text-gray-400 text-xs">
+        <p className="text-gray-400 text-xs text-center">
           Please enter all the details below
         </p>
         <div className="my-5 max-w-xs">
@@ -128,6 +145,8 @@ function AddAddressForm({ AddressToBeUpdated }) {
               type="text"
               placeholder="635001"
               className=" text-left w-full border-gray-500 px-4 py-3 focus-visible:border-gray-800"
+              minLength="6"
+              maxLength="6"
               onChange={e =>
                 setNewAddressToBeAdded(prev => ({
                   ...prev,
@@ -143,6 +162,8 @@ function AddAddressForm({ AddressToBeUpdated }) {
             <input
               type="text"
               placeholder="7201572015"
+              minLength="10"
+              maxLength="10"
               className=" text-left w-full border-gray-500 px-4 py-3 focus-visible:border-gray-800"
               onChange={e =>
                 setNewAddressToBeAdded(prev => ({
@@ -159,13 +180,15 @@ function AddAddressForm({ AddressToBeUpdated }) {
               <button
                 className="w-full text-white bg-pink-700 mx-1 p-3 rounded-md font-bold"
                 onClick={() => {
-                  updateAddressInAddressBook(
-                    AddressToBeUpdated._id,
-                    newAddressToBeAdded,
-                    datadispatch
-                  );
+                  if (validateForm()) {
+                    updateAddressInAddressBook(
+                      AddressToBeUpdated._id,
+                      newAddressToBeAdded,
+                      datadispatch
+                    );
 
-                  setIsUserProfileDisplayed(true);
+                    setIsUserProfileDisplayed(true);
+                  }
                 }}
               >
                 Save
@@ -174,10 +197,12 @@ function AddAddressForm({ AddressToBeUpdated }) {
               <button
                 className="w-full text-white bg-pink-700 mx-1 p-3 rounded-md font-bold"
                 onClick={() => {
-                  addAddressToAddressBook(newAddressToBeAdded, datadispatch);
+                  if (validateForm()) {
+                    addAddressToAddressBook(newAddressToBeAdded, datadispatch);
 
-                  setIsUserProfileDisplayed(true);
-                  setNewAddressToBeAdded(initialAddress);
+                    setIsUserProfileDisplayed(true);
+                    setNewAddressToBeAdded(initialAddress);
+                  }
                 }}
               >
                 Add address
@@ -185,7 +210,9 @@ function AddAddressForm({ AddressToBeUpdated }) {
             )}
             <button
               className="w-full  text-white bg-pink-700 mx-1 p-3 rounded-md font-bold"
-              onClick={() => setIsUserProfileDisplayed(true)}
+              onClick={() => {
+                setIsUserProfileDisplayed(true);
+              }}
             >
               Cancel
             </button>
