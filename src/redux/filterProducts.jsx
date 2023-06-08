@@ -42,14 +42,14 @@ export const filtersInitialState = {
   search: '',
   categoryFilter: [],
   subCategoryFilter: [],
-  ratingsFilter: '',
+  ratingsFilter: 'all',
   priceFilter: 100000,
 };
 
 export const filterProductData = (products, state) => {
-  let newfilteredData = products;
+  let newfilteredData = [...products];
 
-  //sort - check default recommended
+  //sort
   newfilteredData =
     products?.length > 0
       ? state.sortData !== 'recommended'

@@ -33,11 +33,20 @@ function Cart() {
     } else {
       setDiscountPercent(0);
     }
+    // datadispatch({
+    //   type: 'setDiscount',
+    //   payload: Math.round(totalAmount * discountPercent),
+    // });
+  };
+
+  useEffect(() => {
+    // Calculate and dispatch the discount whenever discountPercent changes
     datadispatch({
       type: 'setDiscount',
       payload: Math.round(totalAmount * discountPercent),
     });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discountPercent]);
 
   useEffect(() => {
     setLoading(() => true);
@@ -47,6 +56,7 @@ function Cart() {
     }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
+
   return (
     <div>
       {loading ? (
@@ -185,7 +195,7 @@ function Cart() {
               </table>
             </div>
             <div className="md:mx-4">
-              <div className=" rounded-lg shadow-lg my-3 md:my-1 md:mx-2 w-[23rem] p-5">
+              <div className=" rounded-lg shadow-lg my-3 md:my-1 md:mx-2 w-[23rem] p-2 md:p-5">
                 <p className="border-y-4 border-solid border-blue-950 p-3 font-bold text-blue-950 my-3">
                   PRICE DETAILS
                 </p>

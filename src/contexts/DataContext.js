@@ -25,7 +25,7 @@ export function DataProvider({ children }) {
     filtersInitialState
   );
   const [loading, setLoading] = useState(false);
-  console.log(state);
+
   useEffect(() => {
     setLoading(() => true);
     getProductsFromAPI(dispatch);
