@@ -45,27 +45,25 @@ function Home() {
       </section>
       <div className="my-5  pb-7">
         <p className="text-2xl my-5 ">SHOP BY CATEGORY</p>
-        <div className=" flex flex-col md:flex-row justify-center  w-full items-center">
+        <div className="flex flex-col items-center justify-center md:flex-row">
           {category?.map(categoryItem => {
             const { _id, categoryName, description, imageUrl } = categoryItem;
 
             return (
-              <section
+              <div
+                className="relative hover:cursor-pointer self-center mx-3"
                 key={_id}
                 onClick={() => HandleCategory('categoryFilter', categoryName)}
-                className="hover:cursor-pointer  hover:"
               >
-                <div className="relative">
-                  <img
-                    src={imageUrl}
-                    alt={`${categoryName} section`}
-                    className="w-3/4 md:w-[33vw] h-[300px] mx-5 object-cover"
-                  />
-                  <p className="bg-black/[0.6] absolute bottom-0 text-center w-3/4 md:w-[33vw] mx-5 py-3 text-white font-semibold text-2xl  banner-text">
-                    {description}
-                  </p>
-                </div>
-              </section>
+                <img
+                  src={imageUrl}
+                  alt={`${categoryName} section`}
+                  className="w-full md:w-[33vw] h-[300px]  object-cover"
+                />
+                <p className="bg-black/[0.6] absolute bottom-0 text-center w-full md:w-[33vw]  py-3 text-white font-semibold text-2xl  banner-text">
+                  {description}
+                </p>
+              </div>
             );
           })}
         </div>

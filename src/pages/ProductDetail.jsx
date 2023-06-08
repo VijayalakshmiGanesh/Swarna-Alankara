@@ -126,7 +126,7 @@ function ProductDetail() {
                   </span>
                 </button>
                 <button
-                  className="flex items-center border-pink-700 text-pink-700 border-2 rounded-lg  px-3 py-1 mx-1"
+                  className="flex items-center border-pink-700 text-pink-700 border-2 rounded-lg  p-2 mx-1 font-bold"
                   onClick={() => {
                     if (isUserLoggedIn) {
                       isItemInWishlist(_id, wishlistItems) === -1

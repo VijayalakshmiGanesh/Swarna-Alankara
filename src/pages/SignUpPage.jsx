@@ -3,6 +3,11 @@ import { AuthContext } from '../contexts/AuthContext';
 import { NavLink } from 'react-router-dom';
 import { BiShow, BiHide } from 'react-icons/bi';
 import { notifyError } from '../components/Toasters';
+import {
+  validateEmail,
+  validateNonEmptyText,
+  validateText,
+} from '../regexValidations';
 
 function SignUp() {
   const [emailEntered, setEmailEntered] = useState('');
@@ -13,7 +18,15 @@ function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { SignUpHander } = useContext(AuthContext);
-
+  const inputValidations = () => {
+    return validateEmail(emailEntered) &&
+      validateNonEmptyText(passwordEntered) &&
+      validateText(firstName) &&
+      validateText(lastName) &&
+      validateNonEmptyText(confirmPassword)
+      ? true
+      : false;
+  };
   return (
     <>
       <div className="flex justify-center items-center flex-col ">
@@ -86,7 +99,8 @@ function SignUp() {
               className="mb-5 text-white bg-pink-700 mx-1 p-3 rounded-md w-full font-bold"
               onClick={() =>
                 passwordEntered === confirmPassword
-                  ? SignUpHander(
+                  ? inputValidations() &&
+                    SignUpHander(
                       emailEntered,
                       passwordEntered,
                       firstName,
