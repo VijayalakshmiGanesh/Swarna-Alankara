@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import OrderPlaced from '../components/OrderPlaced';
+import { notifyError } from '../components/Toasters';
 
 function Checkout() {
   const { addressBook, datadispatch, addressToDeliver } = useDataContext();
@@ -42,13 +43,13 @@ function Checkout() {
         <OrderPlaced />
       ) : (
         <>
-          <h1>Checkout</h1>
-          <div className="flex flex-col md:flex-row justify-around">
-            <div className="w-1/2 ">
-              <div className="flex-col justify-center">
+          <h1 className="text-2xl text-blue-950 font-bold">Checkout</h1>
+          <div className="flex flex-col md:flex-row justify-around items-center md:items-start">
+            <div className="md:w-1/2 ">
+              <div className="flex-col justify-center ">
                 {addressBook?.length === 0 ? (
                   <p>
-                    No address available. Go to{' '}
+                    No address available. Go to &nbsp;
                     <span>
                       <NavLink
                         to="/user-profile"
@@ -104,7 +105,7 @@ function Checkout() {
               </div>
             </div>
             <div className="">
-              <div className=" rounded-lg shadow-lg my-1 mx-2 w-[30rem] p-5">
+              <div className=" rounded-lg shadow-lg my-1 mx-2 w-[22rem] md:w-[30rem] p-5">
                 <p className="border-y-4 border-solid border-blue-950 p-3 font-bold text-blue-950 my-3">
                   ORDER DETAILS
                 </p>
@@ -116,7 +117,7 @@ function Checkout() {
                   <p className="flex-col">
                     {cartItems?.map(({ title, qty }) => {
                       return (
-                        <p className="flex justify-between">
+                        <p className="flex justify-between text-left">
                           <span>{title}</span>
                           <span>{qty}</span>
                         </p>
@@ -142,7 +143,7 @@ function Checkout() {
                   </p>
                   <p className="flex justify-between">
                     <span>Coupon discount</span>
-                    {discountAmount}
+                    <span>₹ {discountAmount}.00</span>
                   </p>
                   <p className="flex justify-between text-blue-950 my-1 font-bold">
                     <span>TOTAL AMOUNT</span>
@@ -157,12 +158,24 @@ function Checkout() {
                 </p>
 
                 <div className="mb-1 pb-1">
-                  <p className="text-slate-700 text-sm text-left ">{`${addressToDeliver?.name} ${addressToDeliver?.street}, ${addressToDeliver?.city}, ${addressToDeliver?.state}, ${addressToDeliver?.country} - ${addressToDeliver?.zipCode}`}</p>
+                  {addressBook.length !== 0 ? (
+                    <>
+                      <p className="text-slate-700 text-sm text-left ">{`${addressToDeliver?.name} ${addressToDeliver?.street}, ${addressToDeliver?.city}, ${addressToDeliver?.state}, ${addressToDeliver?.country} - ${addressToDeliver?.zipCode}`}</p>
 
-                  <p className="text-slate-700 text-sm text-left">{`Phone Number: ${addressToDeliver?.mobile}`}</p>
+                      <p className="text-slate-700 text-sm text-left">{`Phone Number: ${addressToDeliver?.mobile}`}</p>
+                    </>
+                  ) : (
+                    <p className="text-red-700 font-bold ">
+                      Select a address to proceed
+                    </p>
+                  )}
                 </div>
                 <button
-                  onClick={() => checkoutHandler()}
+                  onClick={() =>
+                    addressBook.length === 0
+                      ? notifyError('Add address to checkout')
+                      : checkoutHandler()
+                  }
                   className="rounded-full w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
                 >
                   PLACE ORDER
