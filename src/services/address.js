@@ -15,9 +15,7 @@ export const getAddressFromAPI = async dataDispatch => {
         payload: JSON.parse(response._bodyInit).address,
       });
       //   setAddress(JSON.parse(response._bodyInit).address);
-    } else {
     }
-    console.log('address', response);
   } catch (e) {
     console.log(e);
   } finally {
