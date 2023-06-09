@@ -22,7 +22,6 @@ function Checkout() {
   }, [addressSelected]);
 
   const displayRazorpay = async () => {
-    console.log('inside razor pay');
     try {
       const options = {
         key: 'rzp_test_F617Mbu1qtcOjP',
