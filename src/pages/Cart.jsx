@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader/Loader';
@@ -33,10 +34,6 @@ function Cart() {
     } else {
       setDiscountPercent(0);
     }
-    // datadispatch({
-    //   type: 'setDiscount',
-    //   payload: Math.round(totalAmount * discountPercent),
-    // });
   };
 
   useEffect(() => {
@@ -45,8 +42,7 @@ function Cart() {
       type: 'setDiscount',
       payload: Math.round(totalAmount * discountPercent),
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discountPercent]);
+  }, [discountPercent, itemsInCart]);
 
   useEffect(() => {
     setLoading(() => true);
@@ -54,7 +50,6 @@ function Cart() {
     setTimeout(() => {
       setLoading(() => false);
     }, 500);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
 
   return (
