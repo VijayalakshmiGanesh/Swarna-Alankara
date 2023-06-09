@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { AiOutlineHeart, AiOutlineShoppingCart } from 'react-icons/ai';
 import ReactStars from 'react-stars';
 import Loader from '../components/Loader/Loader';
@@ -155,6 +155,12 @@ function ProductDetail() {
           </div>
         </div>
       )}
+      <NavLink
+        to="/products"
+        className="text-pink-700 font-bold hover:underline hover:decoration-4"
+      >
+        Go back
+      </NavLink>
     </>
   );
 }
