@@ -22,42 +22,47 @@ function Checkout() {
   }, [addressSelected]);
 
   const displayRazorpay = async () => {
-    const options = {
-      key: 'rzp_test_F617Mbu1qtcOjP',
-      key_secret: 'QT7L9An23MIuWHmA8Afo30Dq',
-      amount: Number(totalPrice - discountAmount) * 100,
-      currency: 'INR',
-      name: 'Swarna Alankara',
-      description: 'Thank you for shopping with us',
-      image: './assests/logo1-removebg-preview.png',
-      handler: function (response) {
-        notifySuccess('Payment successful');
-        setHasPlacedOrder(true);
-        datadispatch({
-          type: 'setOrderHistory',
-          payload: {
-            orderId: uuid(),
-            cartItems,
-            addressToDeliver: addressSelected,
-            discountAmount,
-            totalPrice,
-          },
-        });
-        setTimeout(() => {
-          navigate('/orderSummary');
-        }, 2500);
-      },
-      prefill: {
-        name: `Vijayalakshmi`,
-        email: 'gviji152000@gmail.com',
-        contact: '900000000',
-      },
-      theme: {
-        color: '#be185d',
-      },
-    };
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+    console.log('inside razor pay');
+    try {
+      const options = {
+        key: 'rzp_test_F617Mbu1qtcOjP',
+        key_secret: 'QT7L9An23MIuWHmA8Afo30Dq',
+        amount: Number(totalPrice - discountAmount) * 100,
+        currency: 'INR',
+        name: 'Swarna Alankara',
+        description: 'Thank you for shopping with us',
+        image: './assests/logo1-removebg-preview.png',
+        handler: function (response) {
+          notifySuccess('Payment successful');
+          setHasPlacedOrder(true);
+          datadispatch({
+            type: 'setOrderHistory',
+            payload: {
+              orderId: uuid(),
+              cartItems,
+              addressToDeliver: addressSelected,
+              discountAmount,
+              totalPrice,
+            },
+          });
+          setTimeout(() => {
+            navigate('/orderSummary');
+          }, 2500);
+        },
+        prefill: {
+          name: `Vijayalakshmi`,
+          email: 'gviji152000@gmail.com',
+          contact: '900000000',
+        },
+        theme: {
+          color: '#be185d',
+        },
+      };
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const checkoutHandler = () => {
