@@ -42,8 +42,7 @@ function UserProfile() {
                 <p className="my-1">
                   <span className="font-semibold">Username:</span>
                   <span className="text-slate-900 px-1 ">
-                    {loggedInUserDetails.firstName}
-                    {loggedInUserDetails.lastName}
+                    {`${loggedInUserDetails?.firstName} ${loggedInUserDetails.lastName}`}
                   </span>
                 </p>
                 <p className="my-1">
