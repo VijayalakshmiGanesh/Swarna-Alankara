@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import OrderPlaced from '../components/OrderPlaced';
-import { notifyError } from '../components/Toasters';
+import { notifyError, notifySuccess } from '../components/Toasters';
 
 function Checkout() {
   const { addressBook, datadispatch, addressToDeliver } = useDataContext();
@@ -21,21 +21,47 @@ function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addressSelected]);
 
-  const checkoutHandler = () => {
-    setHasPlacedOrder(true);
-    datadispatch({
-      type: 'setOrderHistory',
-      payload: {
-        orderId: uuid(),
-        cartItems,
-        addressToDeliver: addressSelected,
-        discountAmount,
-        totalPrice,
+  const displayRazorpay = async () => {
+    const options = {
+      key: 'rzp_test_F617Mbu1qtcOjP',
+      key_secret: 'QT7L9An23MIuWHmA8Afo30Dq',
+      amount: Number(totalPrice - discountAmount) * 100,
+      currency: 'INR',
+      name: 'Swarna Alankara',
+      description: 'Thank you for shopping with us',
+      image: './assests/logo1-removebg-preview.png',
+      handler: function (response) {
+        notifySuccess('Payment successful');
+        setHasPlacedOrder(true);
+        datadispatch({
+          type: 'setOrderHistory',
+          payload: {
+            orderId: uuid(),
+            cartItems,
+            addressToDeliver: addressSelected,
+            discountAmount,
+            totalPrice,
+          },
+        });
+        setTimeout(() => {
+          navigate('/orderSummary');
+        }, 2500);
       },
-    });
-    setTimeout(() => {
-      navigate('/orderSummary');
-    }, 2500);
+      prefill: {
+        name: `Vijayalakshmi`,
+        email: 'gviji152000@gmail.com',
+        contact: '900000000',
+      },
+      theme: {
+        color: '#be185d',
+      },
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
+
+  const checkoutHandler = () => {
+    displayRazorpay();
   };
   return (
     <>
