@@ -7,7 +7,7 @@ import { IoCloseSharp } from 'react-icons/io5';
 
 function Header() {
   const [isClicked, setIsClicked] = useState(false);
-  const { filterdispatch } = useDataContext();
+  const { filterdispatch, cartItems, wishlistItems } = useDataContext();
   const [textToSearch, SetTextToSearch] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,6 +17,8 @@ function Header() {
   const activeNavLink = ({ isActive }) => ({
     color: isActive && 'white',
   });
+
+  const noOfItemsinCart = () => cartItems.reduce((sum, i) => sum + i.qty, 0);
 
   useEffect(() => {
     setIsDiscountClosed(true);
@@ -97,7 +99,12 @@ function Header() {
                   to="/cart"
                   className="lg:px-5 py-2 block  hover:text-white font-semibold"
                 >
-                  Cart
+                  Cart{' '}
+                  {noOfItemsinCart() >= 1 && (
+                    <span className="bg-pink-700 text-white rounded-full px-2">
+                      {noOfItemsinCart()}
+                    </span>
+                  )}
                 </NavLink>
               </li>
               <li>
@@ -106,7 +113,12 @@ function Header() {
                   to="/wishlist"
                   className="lg:px-5 py-2 block  hover:text-white font-semibold"
                 >
-                  WishList
+                  WishList{' '}
+                  {wishlistItems.length >= 1 && (
+                    <span className="bg-pink-700 text-white rounded-full px-2">
+                      {wishlistItems.length}
+                    </span>
+                  )}
                 </NavLink>
               </li>
               <li>
