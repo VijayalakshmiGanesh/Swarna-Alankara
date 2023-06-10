@@ -9,6 +9,7 @@ import {
   reduceItemQuantity,
   removeItemFromCart,
 } from '../services/cart';
+import { isItemInWishlist } from '../services/wishlist';
 
 function Cart() {
   const {
@@ -171,6 +172,8 @@ function Cart() {
                               <button
                                 className="rounded-lg w-[90%] bg-pink-700 text-white hover:bg-white hover:text-pink-700 hover:border-pink-700 hover:border-solid hover:border-2 hover:font-semibold my-1 px-2 py-1"
                                 onClick={() =>
+                                  isItemInWishlist(item._id, wishlistItems) ===
+                                    -1 &&
                                   MoveToWishListFromCart(
                                     item,
                                     datadispatch,
@@ -178,7 +181,10 @@ function Cart() {
                                   )
                                 }
                               >
-                                Move to wishlist
+                                {isItemInWishlist(item._id, wishlistItems) ===
+                                -1
+                                  ? 'Move to wishlist'
+                                  : 'Already in wishlist'}
                               </button>
                             </span>
                           </td>
