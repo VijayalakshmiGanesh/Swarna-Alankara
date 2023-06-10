@@ -68,10 +68,10 @@ export function makeServer({ environment = 'development' } = {}) {
               name: 'Vijayalakshmi',
               street: '123, Flower Street',
               city: 'Bangalore',
-              state: 'Karnataka ',
+              state: 'Karnataka',
               country: 'India',
               zipCode: '525252',
-              mobile: '123456789',
+              mobile: '1234567890',
             },
           ],
         })
