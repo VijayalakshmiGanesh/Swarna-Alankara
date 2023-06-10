@@ -4,17 +4,19 @@ import { useDataContext } from '../contexts/DataContext';
 import { getCategoriesFromAPI } from '../services/category';
 
 function Home() {
-  const { datadispatch, category, filterdispatch } = useDataContext();
+  const { datadispatch, category, filterdispatch, SetTextToSearch } =
+    useDataContext();
 
   const navigate = useNavigate();
   const HandleCategory = (filterType, valueToSend) => {
-    filterdispatch({ type: 'reset' });
     filterdispatch({ type: filterType, payload: valueToSend });
     navigate('/products');
   };
 
   useEffect(() => {
+    filterdispatch({ type: 'reset' });
     getCategoriesFromAPI(datadispatch);
+    SetTextToSearch('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
