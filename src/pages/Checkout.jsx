@@ -106,7 +106,7 @@ function Checkout() {
                       return (
                         <div
                           key={_id}
-                          className="mt-3 border border-2 border-solid border-gray-50 shadow-lg flex justify-left text-left"
+                          className="mt-3 border border-2 border-solid border-gray-50 shadow-lg flex justify-left text-left mx-1"
                         >
                           <input
                             type="radio"
@@ -130,6 +130,18 @@ function Checkout() {
                         </div>
                       );
                     })}
+                    <p className="text-blue-950 my-3 font-semibold border border-2 py-1 bg-red-100 mx-1">
+                      To add new address, go to &nbsp;
+                      <span>
+                        <NavLink
+                          to="/user-profile"
+                          className="text-pink-700 font-bold  hover:underline hover:decoration-4"
+                        >
+                          profile page
+                        </NavLink>
+                      </span>{' '}
+                      to add address
+                    </p>
                   </>
                 )}
               </div>
