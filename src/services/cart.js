@@ -30,7 +30,8 @@ export const isItemInCart = (idToFind, itemsInCart) =>
 export const addItemToCart = async (
   productToAddInCart,
   dataDispatch,
-  itemsInCart
+  itemsInCart,
+  flag
 ) => {
   const isItemFound = isItemInCart(productToAddInCart._id, itemsInCart);
   dataDispatch({ type: 'setLoading', payload: 'true' });
@@ -45,7 +46,7 @@ export const addItemToCart = async (
       });
 
       if (response.status === 201) {
-        notifySuccess('Product added to cart');
+        flag !== true && notifySuccess('Product added to cart');
       } else {
         notifyError('Some error occured. please try again');
       }
@@ -81,7 +82,8 @@ export const addItemToCart = async (
 
 export const removeItemFromCart = async (
   productToBeRemovedFromCartID,
-  dataDispatch
+  dataDispatch,
+  flag
 ) => {
   dataDispatch({ type: 'setLoading', payload: 'true' });
   try {
@@ -95,7 +97,7 @@ export const removeItemFromCart = async (
       }
     );
     if (response.status === 200) {
-      // notifySuccess('Product removed from cart');
+      flag !== true && notifySuccess('Product removed from cart');
     }
   } catch (e) {
     console.log(e);
@@ -150,7 +152,7 @@ export const MoveToWishListFromCart = (
   dataDispatch,
   itemsInWishList
 ) => {
-  removeItemFromCart(productToBeMoved._id, dataDispatch);
-  addItemToWishlist(productToBeMoved, dataDispatch, itemsInWishList);
+  removeItemFromCart(productToBeMoved._id, dataDispatch, true);
+  addItemToWishlist(productToBeMoved, dataDispatch, itemsInWishList, true);
   notifySuccess('Product moved to wishlist');
 };

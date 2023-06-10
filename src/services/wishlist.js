@@ -1,4 +1,4 @@
-import { notifySuccess } from '../components/Toasters';
+import { notifyError, notifySuccess } from '../components/Toasters';
 import { addItemToCart } from './cart';
 
 export const getWishlistItems = async dataDispatch => {
@@ -17,6 +17,8 @@ export const getWishlistItems = async dataDispatch => {
         payload: JSON.parse(response._bodyInit).wishlist,
       });
       //   setItemsinWishList(JSON.parse(response._bodyInit).wishlist);
+    } else {
+      notifyError('Something went wrong. Please try again later');
     }
   } catch (e) {
     console.log(e);
@@ -31,7 +33,8 @@ export const isItemInWishlist = (idToFind, itemsInWishList) =>
 export const addItemToWishlist = async (
   productToAddWishlist,
   dataDispatch,
-  itemsInWishList
+  itemsInWishList,
+  flag
 ) => {
   // const isItemFound = isItemInWishlist(
   //   productToAddWishlist._id,
@@ -48,8 +51,9 @@ export const addItemToWishlist = async (
       body: JSON.stringify({ product: productToAddWishlist }),
     });
     if (response.status === 201) {
-      // setShowAlert(true);
-      notifySuccess('Product added to wishlist');
+      flag !== true && notifySuccess('Product added to wishlist');
+    } else {
+      notifyError('Something went wrong. Please try again later');
     }
   } catch (e) {
     console.log(e);
@@ -77,7 +81,8 @@ export function AddToWishlistHander(
 
 export const removeItemFromWishlist = async (
   productToBeRemovedFromWishlistID,
-  dataDispatch
+  dataDispatch,
+  flag
 ) => {
   dataDispatch({ type: 'setLoading', payload: 'true' });
   try {
@@ -90,9 +95,10 @@ export const removeItemFromWishlist = async (
         },
       }
     );
-    console.log(response);
     if (response.status === 200) {
-      notifySuccess('Product removed from wishlist');
+      flag !== true && notifySuccess('Product removed from wishlist');
+    } else {
+      notifyError('Something went wrong. Please try again later');
     }
   } catch (e) {
     console.log(e);
@@ -107,7 +113,7 @@ export const MoveToCartFromWishList = (
   dataDispatch,
   itemsInCart
 ) => {
-  removeItemFromWishlist(productToBeMoved._id, dataDispatch);
-  addItemToCart(productToBeMoved, dataDispatch, itemsInCart);
+  removeItemFromWishlist(productToBeMoved._id, dataDispatch, true);
+  addItemToCart(productToBeMoved, dataDispatch, itemsInCart, true);
   notifySuccess('Product moved to cart');
 };
