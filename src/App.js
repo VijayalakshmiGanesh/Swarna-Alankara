@@ -81,6 +81,7 @@ function App() {
             </RequiresAuth>
           }
         />
+        <Route path="*" element={<Home />} />
       </Routes>
       <ToastContainer
         position="bottom-right"
