@@ -28,7 +28,7 @@ function Home() {
         <div className="relative">
           <div className="h-[88vh] bg-gray-200 ">
             <img
-              src="./assests/heroBanner.jpg"
+              src="https://images.pexels.com/photos/6387623/pexels-photo-6387623.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               className="h-full object-cover w-full blur-[1px]"
               alt="hero banner"
             />
