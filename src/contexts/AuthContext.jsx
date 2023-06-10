@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { notifyError, notifySuccess } from '../components/Toasters';
 import { getCartItems } from '../services/cart';
 import { getWishlistItems } from '../services/wishlist';
@@ -8,6 +8,8 @@ export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [hasErrorOccured, setHasErrorOccured] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [loggedInUserDetails, setLoggedInUserDetails] = useState({});
@@ -32,7 +34,9 @@ export function AuthProvider({ children }) {
         setIsUserLoggedIn(true);
         setHasErrorOccured(false);
         setLoggedInUserDetails(JSON.parse(response._bodyInit).foundUser);
-        navigate('/products');
+        location?.state?.from?.pathname !== undefined
+          ? navigate(location?.state?.from?.pathname)
+          : navigate('/products');
         notifySuccess('Login Successful...');
         getCartItems(datadispatch);
         getWishlistItems(datadispatch);
