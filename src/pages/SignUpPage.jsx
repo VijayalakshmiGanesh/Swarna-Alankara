@@ -87,7 +87,7 @@ function SignUp() {
               <span className="text-xs text-left">Confirm Password</span>
               <div className=" flex items-center">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="********"
                   className="text-left w-full border-gray-500 px-4 py-3 focus-visible:border-gray-800"
                   onChange={e => setConfirmPassword(e.target.value)}
