@@ -17,7 +17,19 @@ import UserProfile from './pages/UserProfile';
 import RequiresAuth from './components/RequiresAuth';
 import Checkout from './pages/Checkout';
 import OrderSummary from './pages/OrderSummary';
+import { useDataContext } from './contexts/DataContext';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from './contexts/AuthContext';
+import { getAddressFromAPI } from './services/address';
+
 function App() {
+  const { datadispatch } = useDataContext();
+  const { isUserLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    getAddressFromAPI(datadispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUserLoggedIn]);
   return (
     <div className="App">
       <Header />
@@ -72,7 +84,7 @@ function App() {
       </Routes>
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
