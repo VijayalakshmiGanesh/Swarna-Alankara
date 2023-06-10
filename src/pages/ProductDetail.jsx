@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { AiOutlineHeart, AiOutlineShoppingCart } from 'react-icons/ai';
@@ -7,24 +8,33 @@ import { AddToCartHander, isItemInCart } from '../services/cart';
 import { useDataContext } from '../contexts/DataContext';
 import { AddToWishlistHander, isItemInWishlist } from '../services/wishlist';
 import { AuthContext } from '../contexts/AuthContext';
+import { notifyError } from '../components/Toasters';
 function ProductDetail() {
   const { id } = useParams();
   const { cartItems, datadispatch, wishlistItems } = useDataContext();
   const { isUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-
+  const [disabledButton, setDisabledButton] = useState(false);
+  const [wishlistDisabledButtons, setWishListDisabledButtons] = useState(false);
   const navigate = useNavigate();
 
   const [productToBeDisplayed, setProducToBeDisplayed] = useState({});
+
   const getProductDetails = async () => {
     setLoading(true);
     try {
       const response = await fetch(`/api/products/${id}`);
 
       if (response.status === 200) {
-        setProducToBeDisplayed(JSON.parse(response._bodyInit).product);
+        if (JSON.parse(response._bodyInit).product !== null) {
+          setProducToBeDisplayed(JSON.parse(response._bodyInit).product);
+        } else {
+          notifyError('Some error occured..');
+          navigate('/products');
+        }
+      } else {
+        notifyError('Something went wrong. Please try again');
       }
-      console.log('product-detail', response);
     } catch (e) {
       console.log(e);
     } finally {
@@ -34,7 +44,6 @@ function ProductDetail() {
 
   useEffect(() => {
     getProductDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const {
     _id,
@@ -48,11 +57,6 @@ function ProductDetail() {
   } = productToBeDisplayed;
   return (
     <>
-      {/* <div className="relative h-[130px] bg-neutral-300">
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <h1 className="text-4xl font-bold text-[#efa939]">Product Details</h1>
-                </div>
-        </div> */}
       {loading ? (
         <Loader />
       ) : (
@@ -102,6 +106,7 @@ function ProductDetail() {
               <p className="my-2 flex font-semibold self-end ">
                 <button
                   className="text-white bg-pink-700 px-3 py-1 rounded-lg flex items-center mx-1"
+                  disabled={disabledButton}
                   onClick={() => {
                     if (isUserLoggedIn) {
                       isItemInCart(_id, cartItems) === -1
@@ -111,6 +116,9 @@ function ProductDetail() {
                             cartItems
                           )
                         : navigate('/cart');
+                      setDisabledButton(true);
+
+                      setTimeout(() => setDisabledButton(false), 1500);
                     } else {
                       navigate('/login');
                     }
@@ -127,6 +135,7 @@ function ProductDetail() {
                 </button>
                 <button
                   className="flex items-center border-pink-700 text-pink-700 border-2 rounded-lg  p-2 mx-1 font-bold"
+                  disabled={wishlistDisabledButtons}
                   onClick={() => {
                     if (isUserLoggedIn) {
                       isItemInWishlist(_id, wishlistItems) === -1
@@ -136,6 +145,9 @@ function ProductDetail() {
                             wishlistItems
                           )
                         : navigate('/wishlist');
+                      setWishListDisabledButtons(true);
+
+                      setTimeout(() => setWishListDisabledButtons(false), 1500);
                     } else {
                       navigate('/login');
                     }
@@ -155,6 +167,7 @@ function ProductDetail() {
           </div>
         </div>
       )}
+
       <NavLink
         to="/products"
         className="text-pink-700 font-bold hover:underline hover:decoration-4"
