@@ -42,7 +42,7 @@ function Header() {
       {isDiscountClosed && (
         <div className="bg-pink-700 text-white py-1 text-center flex items-center justify-center px-3">
           <span className="grow">
-            Use coupon "NEO5" for 5% off on all order
+            Use coupon "NEO5" for 5% off on all orders
           </span>
           <button onClick={() => setIsDiscountClosed(false)}>
             <IoCloseSharp className=" mr-auto border border-2 border-white p-1 text-2xl" />

@@ -78,12 +78,21 @@ function Checkout() {
             <div className="md:w-1/2 ">
               <div className="flex-col justify-center ">
                 {addressBook?.length === 0 ? (
-                  <p>
+                  <p
+                    className="text-blue-950
+                    my-3
+                    font-semibold
+                    border
+                    border-2
+                    py-1
+                    bg-red-100
+                    mx-1"
+                  >
                     No address available. Go to &nbsp;
                     <span>
                       <NavLink
                         to="/user-profile"
-                        className="text-pink-700 font-semibold"
+                        className="text-pink-700 font-bold  hover:underline hover:decoration-4"
                       >
                         profile page
                       </NavLink>
@@ -139,8 +148,8 @@ function Checkout() {
                         >
                           profile page
                         </NavLink>
-                      </span>{' '}
-                      to add address
+                      </span>
+                      .
                     </p>
                   </>
                 )}
