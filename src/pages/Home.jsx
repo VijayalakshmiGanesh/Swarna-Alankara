@@ -1,16 +1,18 @@
 import { useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useDataContext } from '../contexts/DataContext';
 import { getCategoriesFromAPI } from '../services/category';
 
 function Home() {
   const { datadispatch, category, filterdispatch, SetTextToSearch } =
     useDataContext();
-
+  const location = useLocation();
   const navigate = useNavigate();
   const HandleCategory = (filterType, valueToSend) => {
     filterdispatch({ type: filterType, payload: valueToSend });
-    navigate('/products');
+    navigate('/products', {
+      state: { from: location.pathname },
+    });
   };
 
   useEffect(() => {
