@@ -14,7 +14,6 @@ import { getProductsFromAPI } from '../services/products';
 import { getCartItems } from '../services/cart';
 import { getWishlistItems } from '../services/wishlist';
 import { getCategoriesFromAPI } from '../services/category';
-import { getAddressFromAPI } from '../services/address';
 
 export const DataContext = createContext();
 
@@ -25,14 +24,13 @@ export function DataProvider({ children }) {
     filtersInitialState
   );
   const [loading, setLoading] = useState(false);
-
+  const [textToSearch, SetTextToSearch] = useState('');
   useEffect(() => {
     setLoading(() => true);
     getProductsFromAPI(dispatch);
     getCartItems(dispatch);
     getWishlistItems(dispatch);
     getCategoriesFromAPI(dispatch);
-    getAddressFromAPI(dispatch);
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -57,6 +55,8 @@ export function DataProvider({ children }) {
         totalPrice: state?.totalPrice,
         addressToDeliver: state?.addressToDeliver,
         orderHistory: state?.orderHistory,
+        textToSearch,
+        SetTextToSearch,
       }}
     >
       {children}
