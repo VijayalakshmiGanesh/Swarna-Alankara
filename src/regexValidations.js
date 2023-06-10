@@ -34,9 +34,12 @@ export function validatePinCode(pincodeToValidate) {
 }
 
 export function validateText(textToValidate) {
-  const regex = /^[A-Za-z]+$/;
+  const regex = /^[A-Za-z\s]+(\S|\s*)$/;
 
-  if (regex.test(textToValidate)) {
+  if (
+    regex.test(textToValidate) &&
+    validateNonEmptyText(textToValidate, true)
+  ) {
     return true;
   } else {
     notifyError('Enter valid text');
@@ -44,13 +47,13 @@ export function validateText(textToValidate) {
   }
 }
 
-export function validateNonEmptyText(textToValidate) {
+export function validateNonEmptyText(textToValidate, flag) {
   const regex = /\S+/;
 
   if (regex.test(textToValidate)) {
     return true;
   } else {
-    notifyError('Enter valid input');
+    flag !== true && notifyError('Enter valid input');
     return false;
   }
 }
