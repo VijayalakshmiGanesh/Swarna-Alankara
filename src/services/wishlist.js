@@ -17,8 +17,6 @@ export const getWishlistItems = async dataDispatch => {
         payload: JSON.parse(response._bodyInit).wishlist,
       });
       //   setItemsinWishList(JSON.parse(response._bodyInit).wishlist);
-    } else {
-      notifyError('Something went wrong. Please try again later');
     }
   } catch (e) {
     console.log(e);
