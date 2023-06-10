@@ -7,8 +7,14 @@ import { IoCloseSharp } from 'react-icons/io5';
 
 function Header() {
   const [isClicked, setIsClicked] = useState(false);
-  const { filterdispatch, cartItems, wishlistItems } = useDataContext();
-  const [textToSearch, SetTextToSearch] = useState('');
+  const {
+    filterdispatch,
+    cartItems,
+    wishlistItems,
+    textToSearch,
+    SetTextToSearch,
+  } = useDataContext();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,13 +23,20 @@ function Header() {
   const activeNavLink = ({ isActive }) => ({
     color: isActive && 'white',
   });
-
   const noOfItemsinCart = () => cartItems.reduce((sum, i) => sum + i.qty, 0);
 
   useEffect(() => {
     setIsDiscountClosed(true);
   }, []);
 
+  const searchHandler = () => {
+    filterdispatch({ type: 'search', payload: textToSearch });
+
+    pathname !== '/products' &&
+      navigate('/products', {
+        state: { from: location.pathname },
+      });
+  };
   return (
     <>
       {isDiscountClosed && (
@@ -58,22 +71,33 @@ function Header() {
           >
             <ul className="text-[#efa939] lg:flex lg:justify-between lg:items-center text-left  ">
               <li className="flex items-center lg:justify-between">
-                <input
-                  type="text"
-                  placeholder="Enter the product name"
-                  onChange={e => SetTextToSearch(e.target.value)}
-                  className="border-2 border-solid border-[#efa939] rounded-lg py-1 px-4 bg-blue-950"
-                />
-                <button
-                  onClick={() => {
-                    filterdispatch({ type: 'search', payload: textToSearch });
-
-                    pathname !== '/products' && navigate('/products');
-                  }}
-                  className="rounded-lg px-2  py-1 h-full relative right-9 "
-                >
-                  <BiSearchAlt2 />
-                </button>
+                <div className="relative ">
+                  <input
+                    type="text"
+                    placeholder="Enter the product name"
+                    onChange={e => SetTextToSearch(e.target.value)}
+                    value={textToSearch}
+                    onKeyDown={e => e.key === 'Enter' && searchHandler()}
+                    className="border-2 border-solid border-[#efa939] rounded-lg py-1 px-4 bg-blue-950 "
+                  />
+                  {textToSearch.length > 0 && (
+                    <button
+                      className="rounded-lg px-2  py-1 h-full absolute right-5 "
+                      onClick={() => {
+                        SetTextToSearch('');
+                        filterdispatch({ type: 'search', payload: '' });
+                      }}
+                    >
+                      {<IoCloseSharp />}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => searchHandler()}
+                    className="rounded-lg px-2  py-1 h-full absolute right-0 "
+                  >
+                    <BiSearchAlt2 />
+                  </button>
+                </div>
               </li>
               <li>
                 <NavLink
