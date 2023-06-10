@@ -9,7 +9,7 @@ function OrderSummary() {
     orderHistory[orderHistory.length - 1];
 
   const clearItemsHandler = () => {
-    cartItems?.map(({ _id }) => removeItemFromCart(_id, datadispatch));
+    cartItems?.map(({ _id }) => removeItemFromCart(_id, datadispatch, true));
   };
   useEffect(() => {
     clearItemsHandler();
