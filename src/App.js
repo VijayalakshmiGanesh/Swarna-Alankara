@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import Mockman from 'mockman-js';
 import 'react-toastify/dist/ReactToastify.css';
+import { Suspense, lazy } from 'react';
 
 import './App.css';
 import Header from './components/Header';
 import Home from './pages/Home';
-import Products from './pages/Products';
+// import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
@@ -21,7 +22,8 @@ import { useDataContext } from './contexts/DataContext';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './contexts/AuthContext';
 import { getAddressFromAPI } from './services/address';
-
+import Loader from './components/Loader/Loader';
+const Products = lazy(() => import('./pages/Products'));
 function App() {
   const { datadispatch } = useDataContext();
   const { isUserLoggedIn } = useContext(AuthContext);
@@ -36,7 +38,14 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
+        <Route
+          path="/products"
+          element={
+            <Suspense fallback={<Loader />}>
+              <Products />
+            </Suspense>
+          }
+        />
         <Route path="/product-detail/:id" element={<ProductDetail />} />
         <Route
           path="/cart"
